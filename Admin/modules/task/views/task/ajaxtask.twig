@@ -1,0 +1,61 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>任务ID</th>
+        <th>任务名称</th>
+        <th>任务时间</th>
+        <th>分数</th>
+        <th>状态</th>
+        <th>创建人</th>
+        <th>创建日期</th>
+        <th>最后修改日期</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if lists is not null %}
+        {% for list in lists %}
+            <input type="hidden" id="lid" value="{{ list.id }}">
+            <input type="hidden" id="idcard" value="{{ user.idcard }}">
+            <tr>
+                <td>{{ list.id }}</td>
+                <td class="username" style="cursor:pointer" user="{{ user.nickname }}">
+                    {{ list.title }}
+                </td>
+                <td> {{ list.task_date | date('Y-m-d H:i:s') }}</td>
+                <td> {{ list.all_score }}</td>
+                {% if list.status == 1 %}
+                    <td>正常</td>
+                {% else %}
+                    <td>删除</td>
+                {% endif %}
+
+                <td>{{ list.adder_id }}</td>
+                <td>{{ list.add_time | date('Y-m-d H:i:s') }}</td>
+                <td>{{ list.update_time | date('Y-m-d H:i:s') }}</td>
+
+                <td><a href="edit?id={{ list.id }}" target="_blank"  class="btn btn-primary">编辑</a> |
+                    {% if list.status == 1 %}
+                    <a href="/task/task/forbid?id={{ list.id }}"
+                       j-ajax-callback="taskstatuscallback"  class="btn btn-danger j-ajax-get confirm">停用</a>
+                    {% elseif list.status == 0 %}
+                        <a href="/task/task/active?id={{ list.id }}"
+                           j-ajax-callback="taskstatuscallback"  class="btn btn-primary j-ajax-get confirm">启用</a>
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+<!-- <a href="" class="del_btn">删除</a> -->
+<div class="page">
+    {% block page %}
+        {{ LinkPager(pagination) | raw }}
+        <span>共{{ pagenum }}页，{{ count }}条记录</span>
+    {% endblock %}
+</div>
+<script type="application/javascript">
+
+</script>

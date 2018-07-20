@@ -1,0 +1,41 @@
+/*右侧内容*/
+.right{background: #eff0f4; padding: 20px 20px 0 20px;}
+.right .right_content{width: 100%;min-height: 760px; border:1px solid #e8e8e8;background: #fff;position: relative; padding-bottom: 38px;}
+.right_content_head   {
+    padding: 20px 20px;
+    border-bottom: solid 1px #ea8610;
+}
+.right_content_list {
+    margin: 0px;
+    padding: 20px 20px;
+}
+.right_content_head .search {
+    float: left;
+    margin-right: 20px;
+}
+.right_content_head .form-inline .form-group{margin-right:15px;}
+.right_content_head .form-inline .form-group label{margin-right: 5px;}
+.back_text{
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.page {
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+{% if lists is not null %}
+    {% for list in lists %}
+        {% autoescape  %}
+        <div class="right-item">
+            <div class="q_title">
+                <input type="checkbox"  name="q_id" action-type="qselected"
+                       {% if list.id in qids %}checked="checked"{% endif %}
+                       data-qid="{{ list.id }}" data-qtitle="{{ list.title }}" value="{{ list.id }}"><strong>{{ list.id }}({{  list.qname }})</strong>   <pre>  {{  list.title }}（{{ list.qtypename }}）</pre>
+            </div>
+            <div class="q_content">
+                <ol class="op-items clearfix">
+                    {% for q_res in list.content %}
+                        <li class="op-item"
+                            style="padding: 0px 15px 0px 2px; margin-right: 0px; ">
+                            {% if list.type == 1 %}
+                                {{ q_res.n }}、{{ q_res.c | raw  }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="q-footer ">
+                <div class="pull-left">答案：</div><pre>{{ list.ans }}</pre>
+                <a class="pull-right" role="button" data-toggle="collapse"style="color: #1890ff" href="#id_{{ list.id }}" aria-controls="id_{{ list.id }}">查看解析</a>
+                <div class="clearfix"></div>
+                <div class="collapse " id="id_{{ list.id }}" >
+                    <div class="pull-left">解析：</div> <pre>{{ list.explain | raw  }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endautoescape %}
+    {% endfor %}
+{% endif %}
+<div class="page" style="display: block;width: 100%;overflow: hidden;min-height: 75px;">
+    {{ LinkPager(pagination) | raw }}
+    <span>共{{ pagenum }}页，{{ count }}条记录</span>
+</div>

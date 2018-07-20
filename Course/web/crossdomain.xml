@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">
+<cross-domain-policy>
+  <allow-access-from domain="testcourseapi.xiaoma.cn" to-ports="*"/>
+  <allow-access-from domain="www.xiaoma.cn" to-ports="*"/>
+  <allow-access-from domain="courseapi.xiaoma.cn" to-ports="*"/>
+  <allow-access-from domain="dev.xiaoma.cn" to-ports="*"/>
+  <allow-access-from domain="www.xiaoma.wang" to-ports="*"/>
+  <allow-access-from domain="scratch.xiaoma.wang" to-ports="*"/>
+  <allow-access-from domain="s.xiaoma.wang" to-ports="*"/>
+  <allow-access-from domain="*.xiaoma.wang" to-ports="*"/>
+  <allow-access-from domain="oss.xiaoma.wang" to-ports="*"/>
+  <allow-access-from domain="scratchly.global.ssl.fastly.net" to-ports="*" />
+  <allow-access-from domain="projects-scratchly.global.ssl.fastly.net" to-ports="*" />
+  <allow-access-from domain="assets-scratchly.global.ssl.fastly.net" to-ports="*" />
+  <allow-access-from domain="acceptance-scratchly.global.ssl.fastly.net" to-ports="*"/>
+  <allow-access-from domain="scratch.xiaoma.wang" secure="false"/>
+  <allow-access-from domain="*.aliyuncs.com" to-ports="*"/>
+  <allow-http-request-headers-from domain="testcourseapi.xiaoma.cn" headers="*"/>
+  <allow-http-request-headers-from domain="www.xiaoma.cn" headers="*"/>
+  <allow-http-request-headers-from domain="courseapi.xiaoma.cn" headers="*"/>
+  <allow-http-request-headers-from domain="dev.xiaoma.cn" headers="*"/>
+  <allow-http-request-headers-from domain="*.scratch.xiaoma.wang" headers="*"/>
+  <allow-http-request-headers-from domain="scratch.xiaoma.wang" headers="*"/>
+  <allow-http-request-headers-from domain="*.xiaoma.wang" headers="*"/>
+  <allow-http-request-headers-from domain="oss.xiaoma.wang" headers="*"/>
+  <allow-http-request-headers-from domain="*.aliyuncs.com" headers="*"/>
+  <allow-http-request-headers-from domain="scratchly.global.ssl.fastly.net" headers="*"/>
+  <allow-http-request-headers-from domain="projects-scratchly.global.ssl.fastly.net" headers="*"/>
+
+  <allow-http-request-headers-from domain="assets-scratchly.global.ssl.fastly.net" headers="*"/>
+  <allow-http-request-headers-from domain="acceptance-scratchly.global.ssl.fastly.net" headers="*"
+  />
+</cross-domain-policy>

@@ -1,0 +1,134 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block ownstyle %}
+    <link rel="stylesheet" type="text/css" href="/CDN/datetimepicker/css/bootstrap-datetimepicker.min.css">
+{% endblock %}
+{% block main %}
+    <div class="right" style="font-size: 15px">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-5">
+                    <label for="title">试卷标题：</label>
+                    <input type="text" class="form-control" id="exam_title">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-5">
+                <label for="type">试卷类型：</label>
+                <select class="form-control" id="exam_type">
+                    <option value="">请选择试卷类型</option>
+                    <option value="1">历年真题</option>
+                    <option value="2">模拟题</option>
+                </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-5">
+                    <label for="exam_complexity">试卷难度等级(1为最低，5为最高，默认为3)</label>
+                    <input type="number" value="3" onkeypress='return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )' min=1 max=5 class="form-control" id="exam_complexity">
+                </div>
+            </div>
+        </div>
+        <div class="form-group hidden" id="show_exam_year">
+            <div class="row">
+                <div class="col-xs-5">
+                    <label for="exam_year">选择年份</label>
+                    <input type="text" id="exam_year" name="task_date" readonly class="form-control form_datetime">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-5">
+                    <label for="exam_all_score">试卷总分：</label>
+                    <input type="number" onkeypress='return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )' class="form-control" min=0 id="exam_all_score">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-5">
+                <label for="all_time">限定做题时间(单位：分钟)：</label>
+                <input type="number" class="form-control" onkeypress='return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )' min=0 id="exam_all_times" placeholder="若不限定做题时间则无需填写">
+                </div>
+            </div>
+        </div>
+        <button id="save_exam" type="button" class="btn btn-primary">保存试卷</button>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js"></script>
+    <script type="text/javascript" src="/CDN/Js/exam/exam.js?v=1.01"></script>
+    <script src="/CDN/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/CDN/datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#exam_type").change(function(){
+                var type = $("#exam_type").val();
+                if(type == 1){
+                    $("#show_exam_year").removeClass('hidden')
+                    $("#show_exam_year").addClass('show');
+                }else{
+                    $("#show_exam_year").addClass('hidden');
+                }
+            })
+            //提交保存套卷的按钮
+            $("#save_exam").click(function () {
+                var exam_title = $('#exam_title').val();
+                var exam_type = $('#exam_type').val();
+                var exam_all_score = $('#exam_all_score').val();
+                var exam_all_times = $('#exam_all_times').val() || 0;
+                var exam_year = $('#exam_year').val();
+                var exam_complexity = $('#exam_complexity').val();
+                //必填信息的验证
+                if (exam_title == "") {
+                    alert("试卷标题不能为空！");
+                    return;
+                }
+                if (exam_type == ''){
+                    alert("请选择类型");
+                    return;
+                }
+                if(Number.isInteger(exam_all_times)){
+                    alert("请输入正确的限定做题时间");
+                    return;
+                }
+                if(Number.isInteger(exam_all_score)){
+                    alert("请输入正确的试卷分数");
+                    return;
+                }
+                if(Number.isInteger(exam_complexity)){
+                    alert("请输入难度星级");
+                    return;
+                }
+                //ajax提交
+                var url = "/exams/exam/add-exam";
+                exam_all_times = exam_all_times * 60;
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    // async: false,
+                    data: {
+                        exam_year:exam_year,
+                        exam_type: exam_type,
+                        exam_complexity:exam_complexity,
+                        exam_title: exam_title,
+                        exam_all_times: exam_all_times,
+                        exam_all_score: exam_all_score,
+                        exam_testlet_data : ''
+                    },
+                    success: function (data) {
+                        //这边返回 创建成果的试卷id
+                        //self.location='/exams/exam/show-testlets?id='+data.id;
+                        self.location='/exams/exam/show-testlets?id=64';
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block main %}
+    <div class="right" xmlns="http://www.w3.org/1999/html">
+        <div class="right_content">
+            {#<div class="right_content_head clearfix">#} {#<span
+		class="selected">添加商品</span>#} {#</div>#}
+            <div class="right_content_tab right_content_add">
+                <form id="addGameLevelForm" method="post"
+                      enctype='multipart/form-data'>
+                    <div class="user_details"
+                         style="position: relative; width: 90%; margin: 0 auto; overflow: auto; _display: inline-block;">
+                        <div style="width: 50%; float: left;">
+                            <div class="right_content_addgame">
+                                <div>
+                                    <label>用户id：</label> <span>{{ user.id }}</span>
+                                </div>
+                                <div>
+                                    <label>是否删除：</label> <span>{{ user.deleted }}</span>
+                                </div>
+                                <div>
+                                    <label>用户昵称：</label> <span>{{ user.nickname }}</span>
+                                </div>
+                                <div>
+                                    <label>用户名：</label> <span>{{ user.username }}</span>
+                                </div>
+                                <div>
+                                    <label>真实姓名：</label> <span>{{ user.realname }}</span>
+                                </div>
+
+                                <div>
+                                    <label>手机号：</label> <span>{{ user.phone }}</span>
+                                </div>
+                                <div>
+                                    <label>登录密码：</label> <span>{{ user.password }}</span>
+                                </div>
+                                <div>
+                                    <label>邮箱：</label> <span>{{ user.email }}</span>
+                                </div>
+                                <div>
+                                    <label>锁定用户：</label>
+                                    {% if user.islock == 0 %}
+                                        <span>正常 </span>
+                                    {% else %}
+                                        <span>锁定 </span>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label>锁定原因：</label> <span>{{ user.lockreason }}</span>
+                                </div>
+                                <div>
+                                    <label>第三方登录key：</label> <span>{{ user.key }}</span>
+                                </div>
+                                <div>
+                                    <label>固定电话：</label> <span>{{ userp.tel }}</span>
+                                </div>
+                                <div>
+                                    <label>QQ：</label> <span>{{ userp.qq }}</span>
+                                </div>
+                                <div>
+                                    <label>身份证号：</label> <span>{{ userp.idcard }}</span>
+                                </div>
+
+                                <div>
+                                    <label>邮箱是否验证：</label> <span>{{ userp.email_check }}</span>
+                                </div>
+                                <div>
+                                    <label>银行id：</label> <span>{{ userp.bank_id }}</span>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div style="margin-right: 210px; ">
+                            <div class="right_content_addgame">
+                                <div>
+                                    <label>头像：</label> <span><img src="{{ user.avator }}" width="50px"></span>
+                                </div>
+                                <div>
+                                    <label>签名：</label> <span>{{ userp.signature }}</span>
+                                </div>
+                                <div>
+                                    <label>银行账号：</label> <span>{{ userp.bank_card }}</span>
+                                </div>
+                                <div>
+                                    <label>持卡人：</label> <span>{{ userp.bank_person }}</span>
+                                </div>
+                                <div>
+                                    <label>用户密码：</label> <span>{{ userp.user_passwd }}</span>
+                                </div>
+                                <div>
+                                    <label>省区市位置：</label> <span>{{ userp.khcs }}</span>
+                                </div>
+                                <div>
+                                    <label>用户星级：</label> <span>{{ userp.xingji }}</span>
+                                </div>
+                                <div>
+                                    <label>用户等级：</label> <span>{{ userp.level }}</span>
+                                </div>
+                                <div>
+                                    <label>活跃度：</label> <span>{{ userp.vitality }}</span>
+                                </div>
+                                <div>
+                                    <label>邀请人：</label> <span>{{ userp.inviter }}</span>
+                                </div>
+                                <div>
+                                    <label>代理商：</label> <span>{{ userp.agent }}</span>
+                                </div>
+                                <div>
+                                    <label>上级：</label> <span>{{ userp.parent }}</span>
+                                </div>
+                                <div>
+                                    <label>代金券：</label> <span>{{ userp.daijinquan }}</span>
+                                </div>
+                                <div>
+                                    <label>首冲金额：</label> <span>{{ userp.shouchong }}</span>
+                                </div>
+                                <div>
+                                    <label>积分：</label> <span>{{ wealth.point }}</span>
+                                </div>
+                                <div>
+                                    <label>卖家信用：</label> <span>{{ wealth.seller_credit }}</span>
+                                </div>
+                                <div>
+                                    <label>买家信用：</label> <span>{{ wealth.buyer_credit }}</span>
+                                </div>
+                                <div>
+                                    <label>用户资金：</label> <span>{{ wealth.money }}</span>
+                                </div>
+                                <div>
+                                    <label>注册时间：</label> <span>{{ user.created }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="bianji_btn" href="/users/user/useredit?id={{ user.id }}">编辑</a>
+                    </div>
+
+                    {#<div class="back_btn add_btn">#} {#<a class="back_btn_blue"
+				id="submitgamelevel">提交</a>#} {#</div>#}
+            </div>
+        </div>
+        </form>
+
+    </div>
+{% endblock %}

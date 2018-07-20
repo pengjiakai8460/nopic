@@ -1,0 +1,220 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+<link rel="stylesheet" type="text/css"
+	href="{{cdn}}/admin/Css/back_common.css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{cdn}}/admin/Css/back.css"
+	charset="utf-8">
+{% endblock %}
+{% block main %}
+<div class="right">
+	<div class="right_content">
+		<div class="right_content_head clearfix">
+			<span class="selected">登录IP</span>
+			<p class="right_content_search clearfix">
+				<input type="text" name="search"> <a href=""
+					class="search_btn">搜索</a>
+			</p>
+		</div>
+		<div
+			class="right_content_table right_content_notice right_content_tab right_content_usertable">
+			<table>
+				<thead>
+					<tr>
+						<th width="5.09%"><input type="checkbox" name="apcheckall"
+							id="apcheckall"></th>
+						<th width="20.28%">编号</th>
+						<th width="10.28%">用户名</th>
+						<th width="10.28%">真实姓名</th>
+						<th width="13.28%">登录IP</th>
+						<th width="13.28%">移动设备登录</th>
+						<th width="16.88%">登录时间</th>
+						<th width="12.47%">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in data %}
+					<tr>
+						<td><input type="checkbox" name="apcheck"></td>
+						<td>{{ p._id }}</td> {#<td><a
+						href="/users/user/userinfo?uid={{p.uid }}" target="_blank">{{ user
+						}}</a></td> #}
+						{#
+						<td><a href="/users/user/userinfo?uid={{ p.uid }}">{{p.username}}</a></td>
+						<td><a href="/users/user/userinfo?uid={{ p.uid }}">{{p.realname}}</a></td>
+						#}
+
+						<td class="username" style="cursor:pointer" user="{{p.username}}">
+                        {{ p.username }}
+                        <input type="hidden" class="phone" value="{{p.phone}}">
+                        <input type="hidden" class="idcard" value="{{p.idcard}}">
+                        <input type="hidden" class="qq" value="{{p.qq}}">
+                        <input type="hidden" class="point" value="{{p.point}}">
+                        <input type="hidden" class="money" value="{{p.money}}">
+                        <input type="hidden" class="uid" value="{{p.uid}}">
+                       
+                        </td>
+                        <td class="username" style="cursor:pointer" user="{{p.username}}">
+                        {{ p.realname }}
+                        <input type="hidden" class="phone" value="{{p.phone}}">
+                        <input type="hidden" class="idcard" value="{{p.idcard}}">
+                        <input type="hidden" class="qq" value="{{p.qq}}">
+                        <input type="hidden" class="point" value="{{p.point}}">
+                        <input type="hidden" class="money" value="{{p.money}}">
+                        <input type="hidden" class="uid" value="{{p.uid}}">
+                        
+                        </td>
+						<td>{{p.ip}}</td>
+						{%if p.device == 1%}
+						<td>否</td>
+						{%else%}
+						<td>是</td>
+						{% endif %}
+						<td>
+						{{p.logintime|date("Y-m-d")}}
+						<br>
+						{{p.logintime|date("H:i:s")}}
+						</td>
+						<td><a href="">查看更多</a></td>
+					</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+			<a href="" class="del_btn">删除</a>
+		</div>
+		<div class="page">
+			<!---
+        <span>共20页，300条记录</span>
+        <a href="" class="page_index">首页</a>
+        <a href="" class="page_prev">上一页</a>
+        <i>...</i>
+        <a href="" class="selected">2</a>
+        <a href="">3</a>
+        <a href="">4</a>
+        <a href="">5</a>
+        <a href="">6</a>
+        <a href="">7</a>
+        <a href="">8</a>
+        <i>...</i>
+        <a href="" class="page_next">下一页</a>
+        <a href="" class="page_shadowe">尾页</a>
+          --->
+			总计：{{ count }}条/{{ pagenum }}页{{ page|raw }}
+		</div>
+		<div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+	</div>
+</div>
+<script type="text/javascript" src="Js/back.js"></script>
+</div>
+<div class="popup" style="display: none;">
+	<div class="popup_vip">
+		<h3>
+			会员信息<span><img src="Images/Back/popup_close.png"></span>
+		</h3>
+		<div>
+			<p>
+				<span>用户名：微信用户_爱丽丝爱吃红烧肉</span>
+			</p>
+			<p>
+				<span>手机号：1826866163</span><span>身份证号：354313543513513135</span>
+			</p>
+			<p>
+				<span>QQ：53453354135</span><span>积分：2000.00</span>
+			</p>
+			<p>
+				<span>账户余额：2000.00元</span>
+			</p>
+			<ul class="clearfix">
+				<li>发送站内信</li>
+				<li>会员操作</li>
+				<li>重置密码</li>
+				<li><a href="">资金明细</a></li>
+				<li><a href="">购买明细</a></li>
+				<li><a href="">出售明细</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="popup_vipcaozuo">
+		<h3>
+			会员信息<span><img src="Images/Back/popup_close.png"></span>
+		</h3>
+		<div>
+			<p class="clearfix">
+				<span>用户名：微信用户_爱丽丝爱吃红烧肉</span><i><input type="checkbox"
+					name="fengting">封停账号</i><i><input type="checkbox"
+					name="jiebang">解绑手机</i>
+			</p>
+			<p class="clearfix">
+				<label>封停原因：</label>
+				<textarea>您好！您发布的账号订单由于没有上传身份证复印件审核未通过，请您稍候上传</textarea>
+			</p>
+			<p class="clearfix">
+				<label>资金：</label> <select>
+					<option>加</option>
+				</select> <input type="text" name="price" class="price"> <i>元</i>
+			</p>
+			<p class="clearfix">
+				<label>资金说明：</label><input type="text" class="zjsm" name="zjsm">
+			</p>
+			<input type="button" name="submit" value="提交">
+		</div>
+	</div>
+	<div class="popup_history">
+		<h3>
+			登录历史<span><img src="Images/Back/popup_close.png"></span>
+		</h3>
+		<div>
+			<p>
+				<span>用户名：微信用户_爱丽丝爱吃红烧肉</span>
+			</p>
+			<ul>
+				<li>编号</li>
+				<li>登录IP</li>
+				<li>登录时间</li>
+			</ul>
+			<ul>
+				<li>1</li>
+				<li>115.23.120.11</li>
+				<li>2016-05-26 20:50:25</li>
+			</ul>
+			<ul>
+				<li>2</li>
+				<li>115.23.120.11</li>
+				<li>2016-05-26 20:50:25</li>
+			</ul>
+			<ul>
+				<li>3</li>
+				<li>115.23.120.11</li>
+				<li>2016-05-26 20:50:25</li>
+			</ul>
+			<ul>
+				<li>4</li>
+				<li>115.23.120.11</li>
+				<li>2016-05-26 20:50:25</li>
+			</ul>
+			<ul>
+				<li>5</li>
+				<li>115.23.120.11</li>
+				<li>2016-05-26 20:50:25</li>
+			</ul>
+		</div>
+	</div>
+	<div class="popup_mail">
+		<h3>
+			会员信息<span><img src="Images/Back/popup_close.png"></span>
+		</h3>
+		<div>
+			<p>接收人：微信用户_爱丽丝爱吃红烧肉</p>
+			<select>
+				<option>短信模板</option>
+			</select><br>
+			<textarea>您好！您发布的账号订单由于没有上传身份证复印件审核未通过，请您稍候上传您清晰的身份证复印件重新申请审核!非常感谢您对dong1</textarea>
+			<input type="button" name="fasong" value="发送">
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{cdn}}/admin/Common/Js/jquery.js"></script>
+<script type="text/javascript" src="{{ cdn }}/admin/Js/tixianmessage.js"></script>
+{% endblock %}

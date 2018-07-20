@@ -1,0 +1,118 @@
+{#<!--知识标签树模态框-->#}
+{% extends "@Admin/modules/layouts/frame/modal.twig" %}
+{% block modalcontent %}
+    <style>
+        .modal-body{overflow: hidden;}
+        .left_body,.right_body {
+            width: 30%;
+            float: left;
+        }
+        .left_body #tree {
+            min-height: 400px;
+            overflow-y: scroll;
+        }
+        .right_body {
+            min-height: 400px;
+            padding: 20px 20px;
+            font-size: 16px;
+        }
+    </style>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加</h4>
+    </div>
+    <div class="modal-body">
+        {% if type == 'comp' %}
+            <input id="rating-input" type="text" title=""/>
+        {% elseif type == 'tag' %}
+            <div class="left_body" style="border-right:1px solid #fdb212;width: 50%;">
+                <ul id="tree" class="ztree"></ul>
+            </div>
+            <div class="right_body" style="overflow-y:hidden; ">
+            </div>
+        {% elseif type == 'from' %}
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="">来源:</label>
+                    <select name="" id="" class="form-control q_from_s">
+                        <option value="2">模拟</option>
+                        <option value="1">真题</option>
+                    </select>
+                </div>
+                <div class="form-group years " style="display: none;">
+                    <label for="">年份</label>
+                    <input type="text" value="" class="form-control q_from_y">
+                </div>
+
+            </div>
+        {% endif %}
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="submit" class="btn btn-primary" data-save="{{ type }}">保存</button>
+    </div>
+
+{% if type == 'comp' %}
+<script type="application/javascript">
+    $(function () {
+        var $inp = $('#rating-input');
+        $inp.rating({
+            min: 0,
+            max: 5,
+            step: 1,
+            size: 'lg',
+            showClear: false
+        });
+    })
+</script>
+{% endif %}
+{% if type == 'tag' %}
+<script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+<script type="application/javascript">
+    $(function () {
+        var data = {{ tags|json_encode()|raw }};
+        setting.callback = {onClick: selecttags};
+        loadLabelTree(data,$('#tree'),selecttags);
+        function selecttags(event,labelId, itreeNode) {
+
+            var id = itreeNode.id;
+            var name = itreeNode.name;
+            while(itreeNode = itreeNode.getParentNode()){
+                if(itreeNode.id != 0){
+                    name=itreeNode.name+'/'+name;
+                }
+            }
+            // var name = itreeNode.name;
+            var toadd = true;
+            if(id != 0){
+                if($('.tag_item')) {
+                    $('.tag_item').each(function (e) {
+                        if($(this).attr('data-tid') == id){
+                            toadd = false;return;
+                        }
+                    })
+                }
+                if(toadd){
+                    var html = '<div class="tag_item" data-tid='+id+' >'+name+'</div>';
+                    $('.right_body').append(html);
+                }
+            }
+        }
+    })
+
+</script>
+{% endif %}
+
+{% if type == 'from' %}
+<script type="application/javascript">
+    $('.q_from_s').change(function () {
+        if($(this).val() == 1 ){
+            $('.years').show();
+        }else{
+            $('.years').hide();
+        }
+    })
+</script>
+{% endif %}
+{% endblock %}

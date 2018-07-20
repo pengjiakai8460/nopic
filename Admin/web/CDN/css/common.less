@@ -1,0 +1,106 @@
+*{font-family: "Microsoft YaHei"}
+.newwrap{
+  width: 1300px;
+  margin: 0 auto;
+  &:after{
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+.right{
+  height: 800px;
+  overflow-y: auto;
+}
+.right_header{
+  font-size: 14px;
+  margin: 10px 20px;
+}
+.user_msg{
+  width: 1200px;
+  overflow: hidden;
+  .fl{display: inline-block;}
+  .usermsg_group{
+    font-size: 14px;
+    margin: 12px 0;
+    line-height: 22px;
+    label{
+      width: 200px;
+      font-size: 14px;
+      text-align: right;
+      display: inline-block;
+      position: relative;
+    }
+    span{
+      width: 350px;
+      line-height: 24px;
+      color: #818181;
+      font-size: 14px;
+      vertical-align: top;
+      display: inline-block;
+    }
+    input{
+      width: 350px;
+      color: #666666;
+      line-height: 24px;
+      padding-left: 10px;
+      box-sizing: border-box;
+    }
+    input[type='radio']{
+      width: 16px;
+      line-height: 16px;
+      font-size: 14px;
+      top: -4px;
+      margin-right: 5px;
+      margin-left: 20px;
+    }
+    textarea{
+      width: 500px;
+      height: 100px;
+      color: #666666;
+      vertical-align: top;
+      padding-left: 10px;
+      resize: none;
+    }
+    .headportbox{
+      line-height: 100px;
+      input[type='file']{
+        width: 100px;
+        height: 100px;
+        margin-left: 10px;
+        padding-left: 0;
+        position: absolute;
+      }
+      img{
+        width: 100px;
+        height: 100px;
+        margin-left: 10px;
+        position: absolute;
+      }
+    }
+    .groupbtn{
+      width: 80px;
+      line-height: 30px;
+      color: #fff;
+      text-align: center;
+      background: #FFAF24;
+      border-radius: 3px;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+  .usermsg_btn{
+    p{
+      width: 100px;
+      line-height: 36px;
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+      background: #FF9228;
+      margin: 48px;
+      margin-left: 204px;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+}

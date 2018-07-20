@@ -1,0 +1,69 @@
+{% set module = app.controller.module.id %}
+{% set controller = app.controller.id %}
+{% set action = app.controller.action.id %}
+
+  {% block left %}
+      <div class="left_nav" id="scrollbar">
+          <div>
+              <h3 {% if module == 'question' %} class="selected" {% endif %}>
+                  <i class="icon-edit"></i> <span>题目管理</span>
+                <span class="pull-right-container">
+                  <i class="icon-angle-right icon-large pull-right"></i>
+                </span>
+              </h3>
+              <ul>
+                  <li {% if action == 'index' and module == "question" %}class="selected"{% endif %} ><a
+                                  href="/question/question/index">题目列表</a></li>
+              </ul>
+          </div>
+          <div>
+              <h3 {% if module == 'exams' %}class="selected"{% endif %}>
+                  <i class="icon-pencil"></i> <span>套题管理</span>
+              <span class="pull-right-container">
+                <i class="icon-angle-right icon-large pull-right"></i>
+              </span>
+              </h3>
+              <ul>
+                  <li {% if action == 'index-list' %} class="selected" {% endif %} ><a href="/exams/exam/index-list">套题列表</a></li>
+                  <!--<li {% if action == 'autogeneration' %} class="selected" {% endif %} ><a href="/exams/exam/autogeneration">自动生成</a></li>
+                    -->
+              </ul>
+          </div>
+          <div>
+              <h3 {% if module == 'task' %}class="selected"{% endif %}>
+              <i class="icon-tasks"></i> <span>每日任务</span>
+                <span class="pull-right-container">
+                  <i class="icon-angle-right icon-large pull-right"></i>
+                </span>
+              </h3>
+              <ul>
+                  <li {% if action == 'index'  and module == "task" %}class="selected"{% endif %} ><a
+                                  href="/task/task/index">每日任务列表</a></li>
+              </ul>
+          </div>
+          <div>
+              <h3 {% if module == 'tag' %}class="selected"{% endif %}>
+              <i class="icon-book"></i> <span>知识点标签</span>
+                <span class="pull-right-container">
+                  <i class="icon-angle-right icon-large pull-right"></i>
+                </span>
+              </h3>
+              <ul>
+                  <li {% if action == 'indexlist' %}class="selected"{% endif %} ><a href="/tag/tag/indexlist">知识点列表</a></li>
+              </ul>
+          </div>
+          <div>
+              <h3 {% if module == 'feedback' %}class="selected"{% endif %}>
+                  <i class="icon-comment-alt"></i> <span>意见反馈</span>
+                  <span class="pull-right-container">
+                  <i class="icon-angle-right icon-large pull-right"></i>
+                </span>
+              </h3>
+              <ul>
+                  <li {% if action == 'indexlist' %}class="selected"{% endif %} ><a href="/feedback/feedback/index">意见反馈列表</a></li>
+              </ul>
+          </div>
+      </div>
+
+  {% endblock %}
+

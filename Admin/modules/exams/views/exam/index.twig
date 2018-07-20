@@ -1,0 +1,119 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block main %}
+    <div class="right">
+        <div class="right_content ">
+            <div class="right_content_head">
+                <form action="/exams/exam/index-list" class="form-inline search" method="get">
+
+                    <div class="form-group">
+                        <label for="title" >套题名称：</label>
+                        <input class="form-control" type="text" name="title"  placeholder="请输入套题名称" value="{{ searchKeys.title }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id" >套题id：</label>
+                        <input class="form-control" type="text"  name="id"  placeholder="请输入ID" value="{{ searchKeys.id }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">类型：</label>
+                        <select class = "form-control" name="type" id="type">
+                            <option value="0">请选择类型</option>
+                            <option value="1">真题</option>
+                            <option value="2">模拟卷</option>
+                        </select>
+
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="搜索">
+                    <a href="/exams/exam/index-list" class="btn btn-primary">重置</a>
+                </form>
+                <a href="/exams/exam/create-exam" class="btn btn-primary">添加</a>
+            </div>
+            <div class="right_content_list">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>套题id</th>
+                        <th>套题名称</th>
+                        <th>分数</th>
+                        <th>状态</th>
+                        <th>创建人</th>
+                        <th>创建日期</th>
+                        <th>最后修改日期</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if lists is not null %}
+                        {% for list in lists %}
+                            <tr>
+                                <td>{{ list.id }}</td>
+                                <td class="username">
+                                    {{ list.title }}
+                                </td>
+                                <td>{{ list.all_score }}</td>
+                                <td>
+                                    {% if list.status == 1 %}
+                                        正常
+                                    {% else %}
+                                        停用
+                                    {% endif %}
+                                </td>
+                                {#<td>{{ list.status }}</td>#}
+                                <td>{{ list.adder_id }}</td>
+                                <td>{{ list.add_time | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ list.update_time | date('Y-m-d H:i:s') }}</td>
+                                <td>
+                                    <a href="/exams/exam/show-testlets?id={{ list.id }}" class="btn btn-primary" target="_blank"  >编辑</a>
+                                    <button class="btn btn-{% if list.status == 1 %}danger{% else %}primary{% endif %}" data-status="{{ list.status }}" onclick="changeStatus({{ list.id }})">
+                                        {% if list.status == 1 %}
+                                            停用
+                                        {% else %}
+                                            启用
+                                        {% endif %}
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="page">
+                {% block page %}
+                    {{ LinkPager(pagination) | raw }}
+					<span>共{{ pageCount }}页，{{ count }}条记录</span>
+                {% endblock %}
+            </div>
+            <div class="back_text">Copyright © 2016 XiaoMa Technology</div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        //变更状态的方法
+        function changeStatus(id){
+            var r = confirm('您确定要执行吗？')
+            if( r == true ) {
+                $.ajax({
+                    'type':'GET',
+                    'url':'/exams/exam/change-status',
+                    'data':{'id':id},
+                    'success':function(e){
+						if(e == 2){
+							alert('试卷内没有添加题目，无法启用！');
+						}else{
+	                        prompt('变更成功！');
+	                        //刷新当前页
+	                        setTimeout(location.reload(),2000);
+						}
+                    }
+                })
+            }
+        }
+        $(function(){
+            var type = "{{ searchKeys.type }}" || 0;
+            $("#type").find("option[value="+type+"]").attr('selected', 'selected');
+        })
+        //编辑套题基本信息
+
+    </script>
+{% endblock %}

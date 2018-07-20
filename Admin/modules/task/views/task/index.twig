@@ -1,0 +1,91 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content">
+            <div class="right_content_head">
+                <div class="form-inline search">
+                    <div class="form-group">
+                        <label for="task_name">任务名称：</label><input type="text" class="form-control" name="task_name"
+                                                                   placeholder="请输入任务名称" id="task_name"
+                                                                   value="{{ search.task_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="task_id">任务ID：</label><input type="text" class="form-control" name="task_id"
+                                                                 placeholder="请输入任务ID" id="task_id"
+                                                                 value="{{ search.task_id }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">搜索</button>
+                    <button type="button" class="btn btn-primary clearsearch">重置</button>
+                </div>
+
+                <a a href="/task/task/add" target="_blank" class="btn btn-primary">添加每日任务</a>
+            </div>
+            <div class="right_content_list">
+
+            </div>
+            <div class="back_text">Copyright © 2016 XiaoMa Technology</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+
+            loadtask();
+            $('.search button[type=submit]').click(function (e) {
+                loadtask();
+            })
+
+            $('.right_content_list').on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                loadtask(url);
+            });
+
+            $(".search button[type=button]").click(function (e) {
+                $('.search input').each(function (e) {
+                    $(this).val('');
+                })
+                loadtask();
+            })
+
+
+        })
+
+        function loadtask(url) {
+            loading($('.right_content_list'), 2);
+            if (url == undefined) {
+                url = '/task/task/index-list';
+            }
+            var task_name = $('#task_name').val().trim();
+            var task_id = $('#task_id').val().trim();
+            if (task_name) {
+                url += '?task_name=' + task_name;
+            }
+            if (task_id) {
+                if (url.indexOf('?') != -1) {
+                    url += '&task_id=' + task_id;
+                } else {
+                    url += '?task_id=' + task_id;
+                }
+            }
+            $.get(url, function (data) {
+                $('.right_content_list').html(data);
+                formatContainer($(".right_content_list"));
+            })
+        }
+        function taskstatuscallback(res) {
+            if(res.code == 200){
+                success_prompt('设置成功');
+                var url = $('.right_content_list .page li.active a').attr('href');
+                console.log(url);
+                loadtask(url);
+            }else{
+                fail_prompt('设置失败')
+            }
+        }
+    </script>
+{% endblock %}

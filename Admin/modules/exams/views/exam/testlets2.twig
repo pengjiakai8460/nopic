@@ -1,0 +1,342 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block ownstyle %}
+    <link rel="stylesheet" type="text/css" href="/CDN/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <style>
+        .right_content_table .e-testle .e-testle-title{font-size: 20px;}
+        .e-testle-subt{font-size: 15px;}
+        .q_body .q_title span{color: #1890ff;}
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content ">
+            <div class="right_content_head">
+                <h3 class="pull-left" style="margin-right: 20px;">
+                    试卷标题:{{ exam.title }}
+                    <span style="font-size: 15px;"> 类型：{% if exam.type == 1 %} 真题 {% else %} 模拟题 {% endif %}</span>
+                </h3>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_add_testlet">
+                    添加新题组
+                </button>
+                <button tyep="button" class="btn btn-primary"
+                        data-e-title="{{ exam.title }}"
+                        data-e-type="{{ exam.type }}"
+                        data-e-a-s="{{ exam.all_score }}"
+                        data-e-a-t="{{ exam.all_times }}"
+                        data-e-y="{{ exam.year }}"
+                        data-e-c="{{ exam.complexity }}"
+                        data-toggle="modal"
+                        data-target="#myModal_edit_exam"
+                        id="show_edit_exam">编辑试卷基本信息
+                </button>
+            </div>
+
+            <div class="right_content_table">
+                <div class="e_content">
+                    {% if details is not null %}
+                        {% for k,t in details.testlet %}
+
+                            <div class="e-testle" data-t-id="{{ t.id }}">
+                                <p class="e-testle-title">
+                                    {{ t.title }}
+                                </p>
+                                <p class="e-testle-subt">
+                                    {{ t.subtitle }}
+                                </p>
+                                <a href="javascript:void(0)"  class="btn btn-default add_question"><i class="icon-plus"></i> 添加题目</a>
+                                <button type="button"
+                                   data-title="{{ t.title }}"
+                                   data-subtitle="{{ t.subtitle }}"
+                                   data-id="{{ t.id }}"
+                                   data-sort="{{ t.sort }}"
+                                   data-toggle="modal"
+                                   data-target="#myModal_edit_testlet"
+                                   class="btn btn-default show_edit_testlet"
+                                ><i class="icon-edit"></i> 修改题组</button>
+                                <a href="javascript:void(0)" class="btn btn-default del_testlet" data-t-id="{{ t.id }}" data-e-id="{{ exam.id }}"><i class="icon-remove"></i> 删除题组</a>
+
+
+                                {% for key,q in t.questions %}
+                                    <div class="q_body clearfix" data-qid="{{ q.id }}">
+                                        <div class="q_delete"><span>删除</span></div>
+                                        <div class="q_content">
+                                            <div class="q_title">
+                                                <pre><p class="q_sort">{{ key+1 }}</p>、<span>（题目id{{  q.id }}）</span>{{ q.title  }}</pre>
+                                            </div>
+                                            <ol class="op-items">
+                                                {% if q.type == 1 %}
+                                                {% for selkey,selval in q.content %}
+                                                    <li class="op-item">
+                                                        {{ selkey }}、{{ selval | raw }}
+                                                    </li>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑题组弹窗 -->
+    <div class="modal fade" id="myModal_edit_testlet" >
+        <div class="modal-dialog" style="width:600px ">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">编辑题组</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="testlet_title">题组标题：</label>
+                        <input type="text" class="form-control" id="testlet_title">
+                    </div>
+                    <div class="form-group">
+                        <label for="testlet_subtitle">题组副标题:</label>
+                        <input type="text" class="form-control" id="testlet_subtitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="sort">排序序号:</label>
+                        <input type="text" class="form-control" id="testlet_sort">
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit_testlet">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal_add_testlet" >
+        <div class="modal-dialog" style="width:600px ">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">添加题组</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="testlet_title">题组标题：</label>
+                        <input type="text" class="form-control" id="add_testlet_title">
+                    </div>
+                    <div class="form-group">
+                        <label for="testlet_subtitle">题组副标题:</label>
+                        <input type="text" class="form-control" id="add_testlet_subtitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="sort">排序序号:</label>
+                        <input type="text" class="form-control" id="add_testlet_sort">
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="add_testlet">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--show_edit_exam-->
+    <div class="modal fade" id="myModal_edit_exam" >
+        <div class="modal-dialog" style="width:600px ">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">变更套题基本信息</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exam_title">套题的标题:</label>
+                        <input type="text" class="form-control" id="exam_title">
+                    </div>
+                    <div class="form-group">
+                        <label for="exam_type">套题类型:</label>
+                        <select class="form-control" id="exam_type">
+                            <option value="1">历年真题</option>
+                            <option value="2">模拟题</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="show_exam_year">
+                        <label for="exam_year">选择年份:</label>
+                        <input type="text" id="exam_year" name="exam_year" readonly class="form-control form_datetime">
+                    </div>
+                    <div class="form-group">
+                        <label for="exam_complexity">试卷难度等级：</label>
+                        <input type="number" class="form-control" id="exam_complexity" name="exam_complexity">
+                    </div>
+                    <div class="form-group">
+                        <label for="exam_all_score">套卷总分数:</label>
+                        <input type="text" class="form-control" id="exam_all_score">
+                    </div>
+                    <div class="form-group">
+                        <label for="exam_all_times">做题时间（单位:分钟）:</label>
+                        <input type="text" class="form-control" id="exam_all_times">
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit_exam">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+                <input type="hidden" id="exam_id" value="{{ exam.id }}">
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js?v=1.01"></script>
+    <script type="text/javascript" src="/CDN/Js/exam/exam.js?v=1.01"></script>
+    <script src="/CDN/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/CDN/datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            examObj.form_datetime($('.form_datetime'));
+            examObj.bindClick($('#show_edit_exam'),'show_edit_exam','show_edit_exam_params');// 编辑试卷展示
+            examObj.bindClick($('#edit_exam'),'edit_exam','edit_exam_params');// 编辑试卷
+            examObj.bindClick($('.show_edit_testlet'),'show_edit_testlet','show_edit_testlet_params');//编辑题组展示
+            examObj.bindClick($('#edit_testlet'),'edit_testlet','edit_testlet_params');//编辑题组
+            examObj.bindClick($('.del_testlet'),'del_testlet','del_testlet_params');//删除题组
+            examObj.bindClick($('#add_testlet'),'add_testlet','add_testlet_params');//删除题组
+            examObj.bindClick($('.add_question'),'add_question','add_question_params');//添加题目
+			var fatherQid,childQid;
+			// fatherQid 点击添加题目的id
+			// childQid  当前选中的id
+
+            $(document).on('click', "input[name='q_id']", function (e) {
+			    for(var i=0;i<$(".e-testle").length;i++){
+			        if($(".e-testle").eq(i).attr("data-active") == 1){
+			            fatherQid = $(".e-testle").eq(i).attr("data-t-id");
+			            childQid = $(this).attr("data-qid");
+			        };
+			    }
+                if($(this).prop('checked')){
+                    var qitem;
+                    qitem = analyseQform($(this).parent().parent());
+                    appendQuestion(qitem)
+					//添加题目的方法
+					$.ajax({
+						url:'/exams/exam/add-question',
+						type:'GET',
+						data:{
+							q_id:childQid,
+							t_id:fatherQid
+						},
+						success:function(e){
+							console.log(e);
+						}
+					})
+                }else{
+                    var qid = $(this).attr('data-qid');
+                    $(".q_body[data-qid="+qid+"]").remove();
+                    fromatquessort();
+					//移除题目的方法
+					$.ajax({
+						url:'/exams/exam/del-question',
+						type:'GET',
+						data:{
+							q_id:childQid,
+							t_id:fatherQid
+						},
+						success:function(e){
+							console.log(e);
+						}
+					})
+                }
+				
+            });
+            $('.e_content').on('click', ".q_body .q_delete ", function (e) {
+                var r = confirm('您确定要删除吗？');
+                if(!r){
+                    return
+                }
+				var q_id = $(this).parent().data('qid');
+				var t_id = $(this).parent().parent().data('t-id');
+                $(this).parent().remove();
+                fromatquessort();
+				$.ajax({
+					url:'/exams/exam/del-question',
+					type:'GET',
+					data:{
+						q_id:q_id,
+						t_id:t_id
+					},
+					success:function(e){
+					    success_prompt('删除成功')
+                    }
+				})
+            });
+            $(document).on('click','#myModal button[type=submit]',function (e) {
+                e.preventDefault();
+                dialogClose();
+            })
+
+
+            $("#exam_type").change(function () {
+                if ($("#exam_type").val() != 1) {
+                    $("#show_exam_year").addClass("hidden")
+                } else {
+                    $("#show_exam_year").removeClass("hidden");
+                }
+            })
+
+            //添加题目到题组的方法
+            function analyseQform(obj){
+                var qdata ={'id':'','title':'','content':''};
+                qdata.title = obj.find("input[name='q_id']").attr('data-qtitle');
+                qdata.id  = obj.find("input[name='q_id']").attr('data-qid');
+                qdata.content = obj.find('.q_content').html();
+                return qdata;
+            }
+            function appendQuestion(obj) {
+                var qcount = $('.e-testle[data-active=1] .q_body').length +1;
+                var html = '<div class="q_body clearfix" data-qid="' + obj.id + '"><div class="q_delete"><span>删除</span></div><div class="q_content"><div class="q_title"><pre><p class="q_sort">' + qcount + '</p><span>、（题目id'+ obj.id +'）</span>' + obj.title + '</pre></div>\n' + obj.content +'</div></div>';
+                $('.e-testle[data-active=1]').append(html);
+            }
+            function fromatquessort(){
+                var new_sort = 0;
+                if($('.e-testle[data-active=1] .q_body')){
+                    $('.e-testle[data-active=1] .q_body').each(function(e){
+                        ++new_sort ;
+                        $(this).find(".q_sort").html(new_sort);
+                    })
+                }
+            }
+        })
+
+        function getques() {
+            var ques = '';
+            if($('.e-testle[data-active=1] .q_body')){
+                $('.e-testle[data-active=1] .q_body').each(function(e){
+                    ques += ques ? "," + $(this).attr('data-qid') : ($(this).attr('data-qid')) ;
+                })
+            }
+            return ques;
+        }
+    </script>
+{% endblock %}

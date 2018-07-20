@@ -1,0 +1,82 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back_common.css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back.css" charset="utf-8">
+{% endblock %}
+{% block main %}
+<div class="right">
+    <div class="right_content">
+      <form action="" method="get" accept-charset="utf-8">
+      <div class="right_content_head clearfix">
+        <span class="selected">员工列表</span>
+        <p class="right_content_search clearfix">
+        	<a href="/users/user/staff?add=1" class="add_btn">添加员工</a>
+          <input type="text" name="searchkey" id="" value="{{ app.request.get.searchkey }}" style="float: none;" placeholder="员工ID/姓名">
+          <button type="submit" class="search_btn" >搜索</button>
+        </p>
+      </div>
+      </form>
+      <div class="right_content_table right_content_shopsq right_content_tab right_content_usertable">
+        <table>
+          <thead>
+            <tr>
+              <th width="5%"><input type="checkbox" name="apcheckall" id="apcheckall"></th>
+              <th width="45%">员工uid</th>
+              <th width="50%">员工姓名</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for v in data %}
+            <tr>
+              <td><input type="checkbox" name="apcheck" uid="{{ v.uid }}"></td>
+              <td>{{ v.uid }}</td>
+              <td>{{ v.realname }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a id="delCoupon" href="javascript:;" class="del_btn">删除</a>
+      </div>
+      <div class="page">
+      {% if count %}
+        {% block page %}
+            {{ page|raw }}
+          <span>共{{ pagenum }}页，{{ count }}条记录</span>
+        {% endblock %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ cdn }}/web/Js/laydate.js"></script>
+<script type="text/javascript" src="{{ cdn }}/web/Js/date.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {  
+$('.del_btn').click(function () {
+    var input = $(this).prev().find("input[name='apcheck']:checked");
+    var uid = new Array();
+    for (var i = 0; i < input.length; i++) {
+        uid[i] = input.eq(i).attr('uid');
+    }
+
+    if(uid==''){
+        alert('您没有选择删除项');
+        return;
+    }
+    if(confirm('确认删除吗？')){
+        $.ajax({
+            url: '/users/user/delstaff',
+            type: 'POST',
+            dataType: 'json',
+            data:{'uid':uid},
+            success:function(data){
+              alert(data.info);
+              window.location.reload();
+            }
+        });
+    }
+})
+})
+</script>
+{% endblock %}

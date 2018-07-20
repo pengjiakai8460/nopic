@@ -1,0 +1,72 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+<link rel="stylesheet" type="text/css"
+	href="{{cdn}}/admin/Css/back_common.css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{cdn}}/admin/Css/back.css"
+	charset="utf-8">
+{% endblock %}
+{% block main %}
+<div class="right">
+	<div class="right_content">
+		<div class="right_content_head clearfix">
+			<span class="selected">我邀请的人</span>
+
+		<p class="right_content_search clearfix">
+          <input type="text" name="search" id="search" value="{{ search }}" placeholder="id">
+		  <a href="javascript:;" class="search_btn" id="search_btn">搜索</a>
+        </p>
+        </p>
+		</div>
+		<div
+			class="right_content_table  right_content_tab right_content_usertable">
+			<table>
+				<thead>
+					<tr>
+					    <th width="20%">id</th>
+						<th width="20%">用户名</th>
+						<th width="20%">真实姓名</th>
+						<th width="20%">手机号</th>
+						<th width="20%">邮箱</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in data %}
+					<tr>
+                        <td>{{ p.id }}</td>
+						<td>{{ p.username }}</td>
+                        <td>{{ p.realname }}</td>
+                        <td>{{ p.phone }}</td>
+						<td>{{ p.email }}</td>
+					</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+
+		</div>
+		<div class="page">
+		<span>总计:{{ count }}条/{{ pagenum }}页</span>
+        {{ LinkPager(pages)|raw }}
+		</div>
+		<div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+	</div>
+</div>
+<script type="text/javascript" src="Js/back.js"></script>
+</div>
+{% endblock %}
+{% block js %}
+  <script>
+    $(document).ready(function () {
+      $('#search_btn').click(function () {
+        var search = $('#search').val();
+        if(search){
+          location.href = '/users/user/myinviter?search='+search;
+        }
+      })
+    })
+  </script>
+
+<script type="text/javascript" src="{{cdn}}/admin/Common/Js/jquery.js"></script>
+<script type="text/javascript" src="{{ cdn }}/admin/Js/tixianmessage.js"></script>
+{% endblock %}

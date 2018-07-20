@@ -1,0 +1,165 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="/CDN/css/back_common.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/CDN/css/back.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/CDN/css/center.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/CDN/css/tankuang.css" charset="utf-8">
+    <style>
+        #strat{
+            top: -1px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+  <div class="right">
+    <div class="right_content ">
+      <div class="right_content_head clearfix ">
+        <form action="{% if not islocked %}/users/user/unlocked-user-list{% endif %}" method="get">
+        {% if not islocked %}
+        <span class="selected"><a href="/users/user/unlocked-user-list">用户列表</a></span>
+        <span><a href="/users/user/locked-user-list">封停用户</a></span>
+        {% else %}
+        <span><a href="/users/user/unlocked-user-list">正常用户</a></span>
+        <span class="selected"><a href="/users/user/locked-user-list">封停用户</a></span>
+        {% endif %}
+            <label for="strat" style="display: inline-block;height: 34px;position: relative;top: 0;left: 15px;margin-left: 20px;">起始UID：</label><input type="text" size='12' placeholder="起始UID/1万条" id="strat">
+        <a href="javascript:;" id="excle" style="position:relative;top:-3px;left:28px;display: inline-block;text-align:center;border-radius:2px;background:rgb(254, 177, 44);color:#fff; line-height:34px; width:100px;height:35px;border:1px solid #e8e8e8;">导出用户数据</a>
+
+
+        <p class="right_content_search clearfix">
+            <label for="selecttype" style="display: inline-block;height: 34px;float: left">精确查询：</label>
+            <select id="selecttype" name="selecttype">
+                <option value="0" {% if selecttype==0 %}selected="selected"{% endif %}>所有</option>
+                <option value="1" {% if selecttype==1 %}selected="selected"{% endif %}>uid</option>
+                <option value="2" {% if selecttype==2 %}selected="selected"{% endif %}>username</option>
+                <option value="3" {% if selecttype==3 %}selected="selected"{% endif %}>mobile</option>
+            </select>
+          <input type="text" name="search" placeholder="编号/用户名/手机" value="{{ app.request.get.search }}">
+          {#<a href="{% if not islocked %}unlocked-user-list{% else %}locked-user-list{% endif %}" class="search_btn">搜索</a>#}
+          <button type="submit" class="search_btn">搜索</button>
+        </p>
+        </form>
+      </div>
+      <div class="right_content_table right_content_notice right_content_userlist right_content_tab right_content_usertable ">
+        <table class="tankuang">
+          <thead>
+            <tr>
+              <th width="3.74%"><input type="checkbox" name="apcheckall" id="apcheckall"></th>
+              <th width="10.02%">ID</th>
+              <th width="10.08%">昵称</th>
+              <th width="8%">注册信息<br>(时间&IP)</th>
+              <th width="10.36%">最后登录信息<br>(时间&IP)</th>
+              <th width="9.66%">手机号</th>
+                <th width="9.66%">接单量</th>
+                <th width="9.66%">发单量</th>
+              <th width="12.47%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if users is not null %}
+            {% for user in users %}
+            <input type="hidden" id="qq" value="{{user.qq}}">
+            <input type="hidden" id="idcard" value="{{user.idcard}}">
+            <tr>
+              <td><input type="checkbox" name="apcheck"></td>
+              <td>{{ user.id }}</td>
+              <td class="username" style="cursor:pointer" user="{{user.nickname}}">
+              {{ user.nickname }}
+              <input type="hidden" class="phone" value="{{user.phone}}">
+              <input type="hidden" class="idcard" value="{{user.idcard}}">
+              <input type="hidden" class="qq" value="{{user.qq}}">
+              <input type="hidden" class="point" value="{{user.point}}">
+              <input type="hidden" class="money" value="{{user.money}}">
+              <input type="hidden" class="uid" value="{{user.id}}">
+              </td>
+              <td> {{ user.created | date('Y-m-d H:i:s') }}</td>
+              <td>{{ user.login_time | date('Y-m-d H:i:s')}}</td>
+              <td>{{ user.phone }}</td>
+                <td>{% if user.deal_count == 0 %}{{ user.deal_count }}{% else %}<a href="personal-receive?uid={{ user.id }}" target="_blank">{{ user.deal_count }}</a> {% endif %}</td>
+                <td>{% if user.send_count == 0 %}{{ user.send_count }}{% else %}<a href="personal-release?uid={{ user.id }}" target="_blank">{{ user.send_count }}</a> {% endif %}</td>
+              <td>
+              {#{% if not islocked %}#}
+	              <!--<a href="/users/user/userinfo?uid={{ user.id }}">详情</a> |--><a data-uid="{{ user.id }}" class="tolock">{% if user.islock == '1' %}解封{% else %}封号{% endif %}</a>
+	              <!-- <a href="{{ user.id }}">封停</a> -->
+	          {#{% else %}#}
+	          	  {#<a href="/users/user/cancellock?userid={{ user.id }}">解封</a>#}
+	          {#{% endif %}#}
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+        <!-- <a href="" class="del_btn">删除</a> -->
+        <div class="page">
+        {% block page %}
+        {{ LinkPager(pagination) | raw }}
+        <span>共{{ pagenum }}页，{{ count }}条记录</span>
+        {% endblock %}
+      </div>
+      </div>
+      
+      <div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block commonjs %}
+  <script type="text/javascript" src="/CDN/Js/jquery.js"></script>
+  <script type="text/javascript" src="/CDN/Js/back.js"></script>
+  {#<script type="text/javascript" src="{{ cdn }}/admin/Js/sendmessage.js"></script>#}
+  <script type="text/javascript" src="/CDN/Js/tixianmessage.js?1"></script>
+
+  {#<script type="text/javascript" src="/CDN/Js/sendmessage.js"></script>#}
+  <script type="text/javascript">
+      //封号 or 解封
+      $('.tolock').bind('click', function () {
+          var uid = $.trim($(this).attr('data-uid'));
+          if (uid == '') {
+              alert('数据异常');
+              return false;
+          }
+          $.ajax({
+              url:'/users/user/cancellock',
+              type:'post',
+              dataType:'json',
+              data:{
+                  uid:uid,
+              },
+              success:function (data) {
+                  alert(data.info);
+                  if (data.status) {
+                      window.location.href = window.location.href;
+                  }
+              }
+          })
+      })
+
+      /************加载时的图片**************/
+      if($('#yue').attr('value')==''){
+      	$('#yue').html('账户余额');
+      }
+      $("#excle").click(function (){
+    	  window.location.href = '/users/userexcle/userexcle?strat='+$('#strat').val();
+      });
+      /************账户余额的升序降序 1升序 2降序**************/
+      $('#yue').click(function (){
+              var $img = '';
+              if($('#yue').attr('value')==''){
+              	$('#yue').attr('value',1);
+              	$img = '/web/Images/Game/ordertop.png';
+              }
+              else if($('#yue').attr('value')==1){
+              	$('#yue').attr('value',2);
+              	$img = '/web/Images/Game/seorderbottom.png';
+              }
+              else if($('#yue').attr('value')==2){
+              	$('#yue').attr('value','');
+              }
+              var $yue = $('#yue').attr('value');
+             	var $uid = $('#search').val();
+
+              window.location.href="/users/user/unlocked-user-list?type="+$yue+"&img="+$img;
+      })
+  </script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{#{% set cdn = app.params.cdn %}#}
+{#{% set zj = 'https://flashfish.oss-cn-hangzhou.aliyuncs.com' %}#}
+{% set imgcdn = app.params.cdn17 %}
+{% set module = app.controller.module.id %}
+{% set controller = app.controller.id %}
+{% set action = app.controller.action.id %}
+{% set adm = app.session %}
+
+{#试卷管理#}
+{% set testletsManager = module in ['question', 'tag'] %}
+
+{#每日任务#}
+{% set taskManager = module in ['task'] %}
+
+{#用户管理#}
+{% set memberManager = module in ['member', 'blotfish', 'manage', 'users', 'anchor'] %}
+
+{#套管理#}
+{% set examsManager = module in ['exams'] %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>小码王C++后台</title>
+
+    {% block css %}
+        <link rel="stylesheet" type="text/css" href="/CDN/bootstrap/css/bootstrap.css" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/CDN/bootstrap/css/font-awesome.min.css" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/CDN/css/back_common.css?v=1.29" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/CDN/css/back.css?v=1.1" charset="utf-8">
+    {% endblock %}
+
+    {% block owncss %}
+        <link rel="stylesheet" href="/CDN//jqueryztree/zTreeStyle/zTreeStyle.css" type="text/css" charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/CDN/sweetalert/dist/sweetalert.css">
+    {% endblock %}
+    {% block ownstyle %}
+    {% endblock %}
+</head>
+<body>
+<div class="header clearfix">
+    <div class="header_left"><a href="/"><img src="http://www.xiaoma.wang/img/LOGO.png"></a></div>
+    <div class="header_right">
+        <div class="sidebar-toggle">
+            <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="body" >
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="user_name">
+            <i class="icon-bell-alt"></i>&nbsp;&nbsp;
+            <span>Hi：{{ adm.realname }}</span>
+            <!--<a href="/manage/resetpassword/restpassword">管理员密码重置</a>-->
+            <a href="/account/default/logout">退出</a>
+        </div>
+    </div>
+
+</div>
+<div class="main clearfix">
+    {% block menu_nav %}{% include "@modules/layouts/frame/sider_nav.twig" %}{% endblock %}
+
+    {% block main %}
+
+    {% endblock %}
+
+    {% block commonjs %}
+        <script type="text/javascript" src="/CDN/Js/jquery.js"></script>
+        <script type="text/javascript" src="/CDN/Js/jquery.validate.js"></script>
+        <script type="text/javascript" src="/CDN/Js/jquery.validate.messages_zh-cn.js"></script>
+        <script type="text/javascript" src="/CDN/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/CDN/Js/common.js?v=1.25"></script>
+    {% endblock %}
+
+    {% block js %}
+        <script src="/CDN/sweetalert/dist/sweetalert.min.js"></script>
+        <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+        <script type="text/javascript" src="/CDN/Js/tag/tag.js?v=1.2"></script>
+    {% endblock %}
+
+</div>
+</body>
+</html>
+
+
+

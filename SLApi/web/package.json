@@ -1,0 +1,10 @@
+{
+  "name": "接口文档",
+  "version": "0.1.0",
+  "description": "接口文档",
+  "title": "C++题库接口文档",
+  "url" : "https://api.github.com/v1 ",
+  "template":{
+    "forceLanguage":"zh-cn"
+  }
+}

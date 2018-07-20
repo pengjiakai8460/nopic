@@ -1,0 +1,89 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+    <link rel="stylesheet" type="text/css"
+          href="{{ cdn }}/admin/Css/back_common.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back.css"
+          charset="utf-8">
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content">
+            <div class="right_content_head clearfix">
+                <span class="selected">{{ type }}</span>
+                <a title="每次最多导出20000条" class="finance" diff = {{ type }}>导出订单数据</a>
+
+                <p class="right_content_search clearfix">
+                    <input type="text" name="search" class="search" value="{{ app.request.get.search }}">
+                    <a href="javascript:;" class="search_btn">搜索</a>
+                </p>
+            </div>
+            <div
+                    class="right_content_table right_content_notice right_content_tab right_content_usertable">
+                <table>
+                    <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="5%">发单人ID</th>
+                        <th width="5%">发单人昵称</th>
+                        <th width="5%">手机号</th>
+                        <th width="10%">订单号</th>
+                        <th width="5%">订单种类</th>
+                        <th width="5%">游戏类型</th>
+                        <th width="10%">下单时间</th>
+                        <th width="10%">订单状态</th>
+                        <th width="10%">订单价格</th>
+                        <th width="10%">接单人ID</th>
+                        <th width="10%">接单人昵称</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in list %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.uid }}</td>
+                            <td>{{ p.release_nickname }}</td>
+                            <td>{{ p.release_phone }}</td>
+                            <td>
+                                <a href="{% if p.businesstype == 5 %}/pcorder/pworder/orderdetail?{% else %}/pcorder/ordermanagement/detail?{% endif %}order_id={{ p.order_id }}">{{ p.order_id }}</a>
+                            </td>
+                            <td>{% if p.order_type == 1 %}匹配单{% else %}私有单{% endif %}</td>
+                            <td>{% if p.game == '582a815e5119391544006aa1' %}王者荣耀{% elseif p.game == '5839353d62b9901fc4007571' %}英雄联盟{% elseif p.game == '5a058bf50dde7f834417a00a' %}绝地求生{% else %}{% endif %}</td>
+                            <td>{{ p.create_time | date('Y-m-d H:i:s') }}</td>
+                            <td>{% if p.status == 200 %}待接单{% elseif p.status == 300 %}已接单{% elseif p.status == 400 %}服务中{% elseif p.status == 500 %}待确认{% elseif p.status == [321,331,421,431,521,531,621,631] %}申诉中{% elseif p.status in [732,733,734,735,742,743,744,745,752,753,754,755,762,763,764,765] %}已处理{% elseif p.status == 700 %}已完成{% else %}已关闭{% endif %} </td>
+                            <td>{{ p.price }}</td>
+                            <td>{{ p.receiver_id }}</td>
+                            <td>{{ p.receive_nickname }}</td>
+                            {#<td>{{ p._id }}</td>#}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {#<a href="" class="del_btn">删除</a>#}
+            </div>
+            <div class="page">
+                {% block page %}
+                    {{ LinkPager(pagination) | raw }}
+                    <span>共{{ pagenum }}页，{{ count }}条记录</span>
+                {% endblock %}
+            </div>
+            <div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{ cdn }}/admin/Common/Js/jquery.js"></script>
+    <script type="text/javascript" src="{{ cdn }}/admin/Js/tixianmessage.js"></script>
+    <script>
+        $('.search_btn').on('click', function () {
+            $search = $('.search').val();
+            window.location.href = window.location.href+'&search='+$search;
+        });
+        $('.finance').on('click', function () {
+            var params = "?uid="+{{ app.request.get.uid }};
+            params += '&type='+$(this).attr('diff');
+            window.location.href = '/users/user/dlexcel'+params;
+        })
+
+    </script>
+
+{% endblock %}

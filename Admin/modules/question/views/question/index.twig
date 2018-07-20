@@ -1,0 +1,163 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content ">
+            <div class="right_content_head right_question_search clearfix">
+                <form action="{% if not islocked %}/question/question/index{% endif %}" method="get"
+                      class="form-inline search">
+                    <div class="form-group">
+                        <label for="strat">题目名称：&nbsp;&nbsp;</label>
+                        <input type="text" placeholder="请输入题目名称" id="strat" name="name" class="form-control" value="{{ app.request.get.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="strat">题目ID：&nbsp;&nbsp;</label>
+                        <input type="text" placeholder="请输入题目ID" id="strat" name="qid" class="form-control"
+                               value="{{ app.request.get.qid }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="strat">题型：&nbsp;&nbsp;</label>
+                        <select name="qtype" class="qtype form-control">
+                            <option value="0" {% if app.request.get.qtype == 0 %} selected="selected"{% endif %}>请选择题型
+                            </option>
+                            <option value="1" {% if app.request.get.qtype == 1 %} selected="selected"{% endif %}>单项选择题
+                            </option>
+                            <option value="2" {% if app.request.get.qtype == 2 %} selected="selected"{% endif %}>问题求解
+                            </option>
+                            <option value="3" {% if app.request.get.qtype == 3 %} selected="selected"{% endif %}>
+                                阅读程序写结果
+                            </option>
+                            <option value="4" {% if app.request.get.qtype == 4 %} selected="selected"{% endif %}>完善程序
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="strat">知识点：&nbsp;&nbsp;</label>
+                        <select name="tag" class="form-control">
+                            <option value="0" {% if app.request.get.tag == 0 %} selected="selected"{% endif %}>请选择知识点
+                            </option>
+                            {% for tag in tags  %}
+                            <option value="{{ tag.id }}" {% if app.request.get.tag == tag.id %} selected="selected"{% endif %}>{{ tag.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="search_btn btn btn-primary">搜索</button>
+                </form>
+                <button  class="reset btn btn-primary">重置</button>
+                <a href="/question/question/addquestion" class="btn btn-primary question_add ">添加试题</a>
+            </div>
+            <div class="right_content_list">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>题目ID</th>
+                        <th>题目名称</th>
+                        <th>题型</th>
+                        <th>状态</th>
+                        <th>创建人</th>
+                        <th>创建日期</th>
+                        <th>最后修改日期</th>
+                        <th>知识点</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if lists is not null %}
+                        {% for list in lists %}
+                            <input type="hidden" id="lid" value="{{ list.id }}">
+                            <input type="hidden" id="idcard" value="{{ user.idcard }}">
+                            <tr>
+                                <!--<td><input type="checkbox" name="apcheck"></td>-->
+                                <td>{{ list.id }}</td>
+                                <td>
+                                    {{ list.qname }}
+                                </td>
+                                <td> {{ list.type }}</td>
+                                <td class="del-{{ list.id }}">{{ list.stat }}</td>
+                                <td>{{ list.adder_id }}</td>
+                                <td>{{ list.add_time | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ list.update_time | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ list.tag }}</td>
+                                <td>
+                                    <a href="/question/question/edit?id={{ list.id }}" class="btn btn-primary" target="_blank">编辑</a>
+                                    |
+                                    <input type="button"
+                                            {% if list.status %}
+                                                value="停用" class="btn btn-danger del but-{{ list.id }}"
+                                           {% else %}
+                                               value="启用" class="btn btn-primary del but-{{ list.id }}"
+                                            {% endif %}
+                                    attr-id="{{ list.id }}" attr-stat="{{ list.status }}">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+                <!-- <a href="" class="del_btn">删除</a> -->
+                <div class="page">
+                    {% block page %}
+                        {{ LinkPager(pagination) | raw }}
+                        <span>共{{ pagenum }}页，{{ count }}条记录</span>
+                    {% endblock %}
+                </div>
+            </div>
+
+            <div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        //重置
+        $(".reset").click(function () {
+            $(".form-control").val('');
+            
+        });
+        
+        
+        //删除题目
+        $(".del").click(function () {
+            if (!confirm("你确定要修改么?")) {
+                return false;
+            }
+            qid = $(this).attr("attr-id");
+            stat = $(this).attr("attr-stat");
+            if (!qid) {
+                alert("ID不能为空!");
+                return false;
+            }
+            $.ajax({
+                url: '/question/question/delquestion',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    id: qid,
+                    status: stat,
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    if (!data.code) {
+                        if (stat == 1) {
+                            $(".del-" + qid).html("停用");
+                            $(".but-" + qid).val("启用");
+                            $(".but-" + qid).attr("attr-stat", 0);
+                            $(".but-" + qid).removeClass('btn-danger').addClass('btn-primary')
+                        } else {
+                            $(".del-" + qid).html("正常");
+                            $(".but-" + qid).val("停用");
+                            $(".but-" + qid).attr("attr-stat", 1);
+                            $(".but-" + qid).removeClass('btn-primary').addClass('btn-danger')
+                        }
+                    }
+                }
+            })
+        })
+
+
+    </script>
+{% endblock %}

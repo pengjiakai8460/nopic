@@ -1,0 +1,70 @@
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th class="w50">ID</th>
+        <th class="w50">用户ID</th>
+        <th class="w100">标题</th>
+        <th class="w100">类型</th>
+        <th class="w250" style="width: 200px;">反馈内容</th>
+        <th class="w250" style="width: 200px;">额外字段</th>
+        <th class="w100">状态</th>
+        <th class="w150">创建日期</th>
+        <th class="w150">最后修改日期</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if lists is not null %}
+        {% for list in lists %}
+            <tr>
+                <td >{{ list.id }}</td>
+                <td class="uid" style="cursor:pointer" user="{{ list.uid }}">
+                    {{ list.uid }}
+                </td>
+                <td> {{ list.title }}</td>
+                <td> {{ list.type }}</td>
+                <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-wrap:break-word;word-break:break-all; "><a href="###" class="showfeedback" data-toggle="modal" data-target="#myModal" style="text-decoration: none"> {{ list.content }}</a></td>
+                <td style="word-wrap:break-word;word-break:break-all;overflow: hidden;"> {{ list.question_id }}</td>
+                {% if list.status == 1 %}
+                    <td>正常</td>
+                {% else %}
+                    <td>删除</td>
+                {% endif %}
+                <td>{{ list.add_time | date('Y-m-d H:i:s') }}</td>
+                <td>{{ list.update_time | date('Y-m-d H:i:s') }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+<!-- <a href="" class="del_btn">删除</a> -->
+<div class="page">
+    {% block page %}
+        {{ LinkPager(pagination) | raw }}
+        <span>共{{ pagenum }}页，{{ count }}条记录</span>
+    {% endblock %}
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">详情</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    $(function () {
+        $('.showfeedback').click(function (e) {
+            $("#myModal .modal-body").html($(this).html());
+        })
+    })
+</script>

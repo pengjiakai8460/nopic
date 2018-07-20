@@ -1,0 +1,150 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+    <link rel="stylesheet" href="/CDN//jqueryztree/zTreeStyle/zTreeStyle.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="/CDN/star-rating/css/star-rating.css" media="all" type="text/css" charset="utf-8"/>
+    <style>
+        .uedit-footer{
+            margin-top: 5px;
+        }
+        .qtitle .uedit-content,.qexplain .uedit-content{margin-left: 80px;}
+        .selectQuest .uedit-content{
+            margin-left: 10px;}
+    </style>
+{% endblock %}
+{% block main %}
+
+    <div class="right">
+        <div class="right_content">
+            <div class="right_content_head clearfix">
+                <span class="selected">添加新试题</span>
+            </div>
+            <div class="right_content_list right_content_add">
+                <div class="right_content_addgame">
+                    <form method="post" class="formBlock" action="/question/question/addquest">
+                        <input type="hidden" name="qid">
+                        <div class="form-group clearfix">
+                            <div class="showcomp">
+                            </div>
+                            <div class="showtag">
+                            </div>
+                            <div class="showfrom">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>题目名称：</label>
+                            <input type="text" name="qname" id="qname" data-require-msg="题目名称不能为空!" class="form-control" style="width: 230px;" value="">
+                        </div>
+                        <div class="form-group clearfix">
+                            <label>题型：</label>
+                            <select name="qtype" class="qtype form-control" style="width: 200px;float: left;">
+                                <option value="1">单项选择题</option>
+                                <option value="2">问题求解</option>
+                                <option value="3">阅读程序写结果</option>
+                                <option value="4">完善程序</option>
+                            </select>
+                            <div class="question_label">
+                                <span class="q_comp btn">难点标签</span>
+                                <span class="q_tag btn">知识标签</span>
+                                <span class="q_from btn">来源标签</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>答案数量：</label>
+                            <input type="text" name="answer_count" data-require-msg="答案数量不能为空!" id="answer_count" class="form-control" style="width: 160px;"
+                                   value="1">
+                        </div>
+                        <div class=" form-group qtitle clearfix">
+                            <label>题干：</label>
+                            <span class="uedit-toggle" data-uedit-id="0" data-uedit-open="0"  style="margin-left: 407px;color:#169BD5;">切换编辑模式</span>
+                            <div class="uedit-content">
+                                <textarea class=" form-control"  name="title"  data-require-msg="题干不能为空!" rows="5" style="width: 500px" ></textarea>
+                            </div>
+                            <div class="uedit-footer form-inline">
+                                <label for="">总分:</label> <input type="text" name="score"  data-require-msg="请输入分数"  class="form-control" style="width: 50px;" value="">分
+                            </div>
+                        </div>
+
+
+                        <div class="form-group selectQuest clearfix form-inline">
+                            <label>选项A：</label>
+                            <span class="uedit-toggle" data-uedit-id="1" data-uedit-open="0"  style="color:#169BD5;margin-left:5px;">切换编辑模式</span>
+                            <div class="uedit-content" style="float: left;">
+                                <textarea class="select1 form-control" data-require-msg="选择题选项不能为空" rows="1" style="width: 150px;"></textarea>
+                            </div>
+                            <input type="checkbox" class="answers_sel answers_sel1" >正确答案
+                        </div>
+                        <div class="form-group selectQuest clearfix form-inline">
+                            <label>选项B：</label>
+                            <span class="uedit-toggle" data-uedit-id="2" data-uedit-open="0"  style="color:#169BD5;margin-left:5px;">切换编辑模式</span>
+                            <div class="uedit-content" style="float: left;">
+                                <textarea class="select2 form-control" data-require-msg="选择题选项不能为空" rows="1" style="width: 150px;"></textarea>
+                            </div>
+                            <input type="checkbox" class="answers_sel answers_sel2" >正确答案
+                        </div>
+                        <div class="form-group selectQuest clearfix form-inline">
+                            <label>选项C：</label>
+                            <span class="uedit-toggle" data-uedit-id="3" data-uedit-open="0"  style="color:#169BD5;margin-left:5px;">切换编辑模式</span>
+                            <div class="uedit-content" style="float: left;">
+                                <textarea class="select3 form-control" data-require-msg="选择题选项不能为空" rows="1" style="width: 150px;"></textarea>
+                            </div>
+                            <input type="checkbox" class="answers_sel answers_sel3" >正确答案
+                        </div>
+                        <div class="form-group selectQuest clearfix form-inline">
+                            <label>选项D：</label>
+                            <span class="uedit-toggle" data-uedit-id="4" data-uedit-open="0"  style="color:#169BD5;margin-left:5px;">切换编辑模式</span>
+                            <div class="uedit-content" style="float: left;">
+                                <textarea class="select4 form-control" data-require-msg="选择题选项不能为空" rows="1" style="width: 150px;"></textarea>
+                            </div>
+                            <input type="checkbox" class="answers_sel answers_sel4" >正确答案
+                        </div>
+
+                        <div class="form-group selectOther" style="display: none;">
+                            <label>答案：</label>
+                                <div class="pull-left answer-con clearfix">
+                                    <div class="clearfix answer-item">
+                                        <textarea class="form-control" rows="1"></textarea>
+                                        <label for="" style="width: 50px">分数:</label>
+                                        <input type="text" class="form-control" name="scores" data-require-msg="请输入总分数" style="width: 50px;" value="">
+                                    </div>
+                                </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group qexplain clearfix">
+                            <label>解析：</label>
+                            <span class="uedit-toggle" data-uedit-id="100" data-uedit-open="0"  style="margin-left: 407px;color:#169BD5;">切换编辑模式</span>
+                            <div class="uedit-content">
+                                <textarea class=" form-control"  name="explain" data-require-msg="解析不能为空" rows="5" style="width: 500px" ></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>&nbsp;&nbsp;</label>
+                            <input type="button" class="btn btn-primary" id="addmansub" value="保存">
+                            <a href="/question/question/index"  class="btn btn-primary cancel">取消</a>
+                            <input type="hidden" name="qid" value="">
+                            <input type="hidden" name="q_tag" value="">
+                            <input type="hidden" name="q_comp" value="">
+                            <input type="hidden" name="q_from" value="">
+                            <input type="hidden" name="q_select" value="">
+                            <input type="hidden" name="answer" class="answer"  value="">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="/CDN/star-rating/js/star-rating.js" ></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js"></script>
+    <script type="text/javascript" src="/CDN/Js/question/question.js"></script>
+    <script type="text/javascript" src="/editor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/editor/ueditor.all.min.js"></script>
+    <script id="editor" type="text/plain" style="display: none;width:500px;height:150px;"></script>
+    <script>
+    $(document).ready(function () {
+        questionObj.init();
+    })
+    </script>
+{% endblock %}

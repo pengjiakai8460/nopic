@@ -1,0 +1,51 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block content %}
+    <div class="col-md-6 col-sm-8">
+	<div class="portlet blue-hoki box">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="fa fa-cogs"></i>修改用户登录密码
+			</div>
+        	   <div class="actions">
+        		</div>
+        	</div>
+		<div class="portlet-body">
+	   		<form action="" method="post" >
+			<div class="row static-info">
+				<div class="col-md-3 name">
+					用户:
+				</div>
+        			<div class="col-md-9 value">
+        					{{ user.nickname }} [uid: {{ user.uid }}]
+        			</div>
+			</div>
+			<div class="row static-info">
+				<div class="col-md-3 name">
+					新密码:
+				</div>
+        			<div class="col-md-9 value">
+        					<input type="text" name="passwd" class="form-control"  required >
+        			</div>
+			</div>
+			<div class="row static-info">
+				<div class="col-md-3 name">
+					确定新密码:
+				</div>
+			<div class="col-md-9 value">
+					<input type="text" name=repasswd class="form-control" required >
+			</div>
+			</div>
+			<div class="row static-info">
+				<div class="col-md-7 name">
+					<input type="submit" class="btn blue" name="submit" value="修改"></td>
+				</div>
+			<div class="col-md-5 value">
+{# 					<a href="/index.php/account/account/addaccount">返回</a>#}
+			</div>
+			</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back_common.css?20160818" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back.css?20160818" charset="utf-8">
+    <style>
+        .btn-style{
+            background: #FDB212;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 10px 0 10px 20px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+        .btn-style:hover {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+<div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">管理员管理</span>
+      </div>
+    <div class="right_content_table right_content_notice right_content_userlist right_content_tab right_content_usertable">
+	<div class="row">
+        <div class="col-lg-5">
+			<a href="manageradd" class="btn-style">添加新管理员</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="managerlist" class="btn-style">查看管理员列表</a>
+        </div>
+    </div>
+    <div>
+    <iframe src="/srbac" width="98%" height="900px"  >
+    </iframe>
+
+    </div>
+</div>
+
+{% endblock %}

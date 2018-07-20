@@ -1,0 +1,112 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{cdn}}/admin/Css/back_common.css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{cdn}}/admin/Css/back.css" charset="utf-8">
+{% endblock %}
+{% block main %}
+  <div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">用户信息</span>
+      </div>
+      <form action="" method="post">
+      <div class="right_content_tab right_content_add">
+        <div class="right_content_addgame">
+         
+          <div>
+          
+            <label>用户名：</label>
+            
+             <input type="text" name="username" value="{{data.username}}">
+              
+          </div>
+          <div>
+            <label>手机号：</label>
+            {#
+            <select name="" class="zonename">
+              <option>请选择游戏</option>
+            </select>
+            #}
+            <input type="text" name="phone" value="{{data.phone}}">
+          </div>
+          <div>
+            <label>邮箱：</label>
+            <input type="text" class="servername" name="email" value="{{datas.email}}">
+          </div>
+          
+          <div> 
+            {#<label>用户资金：</label>
+            <input type="text" class="weight" name="weight" value="">#}
+          </div>
+          <div>
+          <label>用户昵称</label>
+          <input type="text" class="weight" name="nickname" value="{{data.nickname}}">
+          </div>
+          <div>
+          <label>真实姓名</label>
+          <input type="text" class="weight" name="realname" value="{{data.realname}}">
+          </div>
+          <div>
+          <label>QQ</label>
+          <input type="text" class="weight" name="qq" value="{{datas.qq}}">
+          </div>
+          
+           <div>
+           <label>固定电话</label>
+           <input type="text" class="weight" name="tel" value="{{datas.tel}}">
+           </div>
+           <div>
+           <label>省市区位置</label>
+           <input type="text" class="weight" name="khcs" value="{{datas.khcs}}">
+           </div>
+            <div><label>身份证号码</label>
+            <input type="text" class="weight" name="idcard" value="{{datas.idcard}}">
+            </div>
+            <div><label>银行卡号</label>
+            <input type="text" class="weight" name="bank_card" value="{{datas.bank_card}}">
+            </div>
+            <div>
+            <label>开户姓名</label>
+            <input type="text" class="weight" name="bank_person" value="{{datas.bank_person}}">
+            </div>
+            <div>
+            <label>活跃度</label>
+            <input type="text" class="weight" name="vitality" value="{{datas.vitality}}">
+            </div>
+            <div>
+            <label>代理商</label>
+            <input type="text" class="weight" name="agent" value="{{datas.agent}}">
+            </div>
+            <div>
+            <label>地区id</label>
+            <input type="text" class="weight" name="location" value="{{datas.location}}">
+            </div>
+          <div>
+          <label>等级</label>
+          <input type="text" class="servername" name="level" value="{{ datas.level }}">
+          </div>
+          <div>
+          <input type="hidden" name="id" value="{{ app.request.get.id }}">
+        </div>
+       
+       <div>
+       <label>首次充值</label>
+       <input type="text" class="weight" name="shouchong" value="{{datas.shouchong}}">
+       </div>
+      
+        {#<div class="back_btn add_btn">
+          <a class="back_btn_blue" id="submitserver">提交</a>#}
+          <input type="submit" value="提交" class="back_btn_blue">
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{cdn}}/admin/Js/back.js"></script>
+<script type="text/javascript" src="{{cdn}}/admin/Js/back_ajax.js"></script>
+<script type="text/javascript" src="{{cdn}}/admin/Common/Js/jquery.js"></script>
+{% endblock %}

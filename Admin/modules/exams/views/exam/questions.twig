@@ -1,0 +1,189 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block main %}
+    <div class="right" style="font-size: 15px">
+        <div class="right_content ">
+            <div class="right_content_head">
+                <div class="h4">试卷：{{ exam.title }}</div>
+                <div class="h4">题组：{{ testlet.title }}</div>
+                <button class="btn btn-info" action-type="loadquestion">添加题目</button>
+            </div>
+            <div class="row">
+                {#<div class="col-xs-1"></div>#}
+                <div class="col-xs-10">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="container" id="main">
+                                <!--试卷内容-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑题组弹窗 -->
+    <div class="modal fade" id="myModal_add_testlet">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">添加题组</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="testlet_title">题组标题：</label>
+                        <input type="text" class="form-control" id="testlet_title">
+                    </div>
+                    <div class="form-group">
+                        <label for="testlet_subtitle">题组副标题:</label>
+                        <input type="text" class="form-control" id="testlet_subtitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="sort">排序序号:</label>
+                        <input type="text" class="form-control" id="testlet_sort">
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit_testlet">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js"></script>
+    <script type="text/javascript">
+        var questions = Array();
+        var testlet_id = {{ t_id }}
+        var crateQuestions = function(){
+            $.ajax({
+                url:'/exams/exam/get-testlet-questions',
+                type:'GET',
+                data:{
+                    id:testlet_id
+                },
+                success:function(e){
+                    questions = e.data;
+                    console.log(e.data);
+                    addQuestions();
+                }
+            })
+        }
+        //渲染题目的方法
+        var addQuestions = function(){
+            if(questions != null){
+                $('#questions-list').remove();
+                var question_html = "";
+                var number_code=1;
+                questions.sort(function (a, b) {
+                    return a.sort - b.sort;
+                })
+                for(var i=0, len = questions.length; i< len; i++) {
+                    // if ( examArr[j].questions[i] == undefined) {
+                    //     continue;
+                    // }
+                    question_html += '<div class="h4">' + number_code + '、' + questions[i].title;
+                    question_html += '<br>' +
+                        '<button type="button" class="btn btn-info" onclick="del_question(' + questions[i].t_q_id + ')">删除</button>';
+                    if(i != 0 ){
+                        question_html += '<button type="button" class="btn btn-info" onclick="up_question(' + questions[i-1].t_q_id + ',' + questions[i].t_q_id +')">上移</button>';
+                    }
+
+                    var xuanxiang = questions[i].content;
+                    for (var k in xuanxiang) {
+                        question_html += '<div class="h5">' + k + '. ' + xuanxiang[k] + '</div>';
+                    }
+                    console.log(i-1);
+                    question_html += '</div>';
+                    number_code++;
+                }
+                $('#main').append('<div id="questions-list" style="width:75%"></div>');
+                $('#questions-list').append(question_html);
+            }else{
+                $('#main').append('<div id="questions-list" style="width:85%">题组尚未添加任何题目</div>');
+            }
+        }
+
+        //删除题目
+        var del_question = function(t_q_id){
+            $.ajax({
+                url:'/exams/exam/del-testlet-question',
+                type:'GET',
+                data:{
+                    t_q_id:t_q_id,
+                },
+                success:function(){
+                    crateQuestions();
+                }
+            })
+        }
+
+        //上移排序方法
+        var up_question = function(a, b){
+            $.ajax({
+                url:'/exams/exam/up-testlet-question-sort',
+                type:'GET',
+                data:{
+                    last_t_q_id:a,
+                    t_q_id:b
+                },
+                success:function(){
+                    crateQuestions();
+                    // location.reload();
+                }
+            })
+        }
+
+        //选择题目
+        function loadquestion() {
+            var url = getAjaxUrl("/task/task/qadd");
+            dialog(url);
+        }
+
+
+        //
+        $(document).on('click',"#form button[type=submit]", function(e){
+            e.preventDefault();
+            var q_arr = Array();
+            for(var i = 0; i < $(".q_s_selected .q_selected_item").length; i++){
+                var id = $(".q_s_selected .q_selected_item").eq(i).data('qid');
+                q_arr.push(id);
+            }
+            if(q_arr.length > 0){
+                addQuestion(q_arr);
+            }
+            dialogClose();
+        })
+        //添加题目
+        var addQuestion = function(q_arr){
+            console.log(q_arr);
+            // q_arr = JSON.stringify(q_arr);
+            var sort = 1;
+            if(questions.length != 0){
+                sort = Number(questions[questions.length-1]['sort']);
+            }
+            $.ajax({
+                url:'/exams/exam/add-question',
+                type:'GET',
+                data:{
+                    'testlet_id':testlet_id,
+                    'q_arr': q_arr,
+                    'sort' : sort
+                },
+                // traditional: true,
+                success:function(e){
+                    crateQuestions();
+                }
+            })
+        }
+        crateQuestions();
+    </script>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+    <link rel="stylesheet" href="/CDN//jqueryztree/zTreeStyle/zTreeStyle.css" type="text/css" charset="utf-8">
+    <style>
+        .right_content_tree {
+            float: left;
+            width: 30%;
+            min-height: 300px;
+        }
+
+        .right_content_detail {
+            min-height: 300px;
+            float: left;
+            width: 60%;
+        }
+
+        #path {
+            margin-left: 20px;
+        }
+
+        .right_content_detail table th, .right_content_detail table tr {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content ">
+            <div class="right_content_head clearfix ">
+                <div class="" style="">
+                    <a href="javascript:void(0);" class="btn btn-default" action-type="label_add">添加知识点</a>
+                    <a href="javascript:void(0);" class="btn btn-default" action-type="label_edit">修改知识点</a>
+                    <a href="javascript:void(0);" class="btn btn-default" action-type="label_delete">删除知识点</a>
+                </div>
+            </div>
+            <div class="right_content_list clearfix">
+                <div class="right_content_tree" style="border-right:1px solid #fdb212">
+                    <h4>列表</h4>
+                    <ul id="tree" class="ztree"></ul>
+                </div>
+                <div class="right_content_detail">
+                    <h4>详情<span id="path"></span></h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>上级</th>
+                            <th>名称</th>
+                            <th>创建时间</th>
+                            <th>修改时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr id="treedetail">
+                            <td>0</td>
+                            <td>无上级</td>
+                            <td>知识树</td>
+                            <td>默认</td>
+                            <td>默认</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setting.view = {
+                addDiyDom: addDiyDom
+            }
+            var data = {{ tags|json_encode()|raw }}
+                loadLabelTree(data, $('#tree'));
+
+
+
+            function addDiyDom(treeId, treeNode) {
+                console.log(treeNode);
+                if(!treeNode.isParent){
+                    var aObj = $("#" + treeNode.tId + "_a");
+                    if ($("#diyBtn_"+treeNode.id).length>0) return;
+                    var editStr = "<span id='diyBtn_space_" +treeNode.id+ "' > </span>"
+                        + "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
+                        //+ "' title='"+treeNode.name+"' onfocus='this.blur();'>自动组卷</button>";
+                        + "' title='"+treeNode.name+"' onfocus='this.blur();' style='display: none;'>自动组卷</button>";
+                    aObj.append(editStr);
+                    var btn = $("#diyBtn_"+treeNode.id);
+                    if (btn) btn.bind("click", function(){
+                        if (confirm("你确定要生成试卷么?")) {
+                            $.ajax({
+                                'type':'GET',
+                                'url':'/exams/exam/autosavebytag',
+                                'data':{'tid':treeNode.id},
+                                'success':function(e){
+                                    //刷新当前页
+                                    //location.reload();
+                                    if (e.status == 'success') {
+                                        alert("生成成功!");
+                                    } else {
+                                        alert("生成失败,请稍后重试!!");
+                                    }
+                                }
+                            })
+                        }
+                        }
+                    );
+                }
+
+            };
+        });
+    </script>
+{% endblock %}

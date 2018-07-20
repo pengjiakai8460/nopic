@@ -1,0 +1,130 @@
+{#<!--试题添加模态框-->#}
+{% extends "@Admin/modules/layouts/frame/modal.twig" %}
+{% block modalcontent %}
+    <style>
+        .modal-dialog {
+             width: 1024px;
+        }
+
+    </style>
+    <form method="post" id="form" class=" form-horizontal"
+          action="">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">添加</h4>
+        </div>
+        <div class="modal-body">
+            <div class="qdd_body">
+                <div class="left_body">
+                    <ul id="tree" class="ztree"></ul>
+                </div>
+                <div class="right_body">
+                    <div class="right_head">
+                        <div class="q_search">
+                            <button class=" btn btn-primary searchall" type="button" action-type="qsearch"
+                                    action-data="0">全部
+                            </button>
+                            <div class="input-group searchkey ">
+                                <div class="input-group searchtype" style="float: left;width: 38%;">
+                                    <select name="seachqtype" class="form-control">
+                                        <option value="0">请选择</option>
+                                        <option value="1">ID</option>
+                                        <option value="2">名称</option>
+                                        <option value="3">创建日期</option>
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" id="searchkey" placeholder="请输入ID或关键词搜索" style="float: left;width: 62%;">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" action-type="qkeysearch"
+                                        action-data="'searchkey'">查询</button>
+                                <button class="btn btn-default" type="button" action-type="qkeyclear"
+                                        action-data="'searchkey'">清空</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="q_s_type">
+                            <button class="btn" type="button" action-type="qsearch" action-data="1">
+                                单选选择({{ qcount.type1 }})
+                                {% if qcount.mytype1 != 0 %}<span class="q_s_num">{{ qcount.mytype1 }}</span>{% endif %}
+                            </button>
+                            <button class="btn" type="button" action-type="qsearch" action-data="2">
+                                问题求解({{ qcount.type2 }})
+                                {% if qcount.mytype2 != 0 %}<span class="q_s_num">{{ qcount.mytype2 }}</span>{% endif %}
+                            </button>
+                            <button class="btn" type="button" action-type="qsearch" action-data="3">
+                                阅读程序写结果({{ qcount.type3 }})
+                                {% if qcount.mytype3 != 0 %}<span class="q_s_num">{{ qcount.mytype3 }}</span>{% endif %}
+                            </button>
+                            <button class="btn" type="button" action-type="qsearch" action-data="4">
+                                完善程序({{ qcount.type4 }})
+                                {% if qcount.mytype4 != 0 %}<span class="q_s_num">{{ qcount.mytype4 }}</span>{% endif %}
+                            </button>
+                        </div>
+                        <div class="q_s_selected">
+                        </div>
+                    </div>
+                    <div class="right_con" id="questions">
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            qsearchBaseUrl = '/task/task/qajax?qids={{ qids | raw }}';
+            var data = {{ tags | raw }};
+            setting.callback = {onClick: searchQuestion};
+            loadLabelTree(data, $('#tree'), searchQuestion);
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                var selectQid = getques();
+                selectQid = selectQid.split(',');
+                $("input[name='q_id']").each(function (e) {
+                    if($(this).prop('checked') ){
+                        if(!selectQid.contains($(this).attr('data-qid'))){
+                            selectQid.push($(this).attr('data-qid'))
+                        }
+                    }
+                })
+                qids = selectQid.join(',');
+                url = changeQueryString('qids',qids,url);
+                loading($('#questions'));
+                $.get(url, function (msg) {
+                    $('#questions').html(msg);
+                });
+            });
+
+            $(document).on('click', "input[name='q_id']", function (e) {
+                if ($(this).prop('checked')) {
+                    var id = $(this).attr('data-qid');
+                    var title = $(this).attr('data-qtitle');
+                    var toadd = true;
+                    if ($('.qdelete')) {
+                        $('.qdelete').each(function (e) {
+                            if ($(this).attr('data-qid') == id) {
+                                toadd = false;
+                                return;
+                            }
+                        });
+                    }
+                    if (toadd) {
+                        var html = '<div class="q_selected_item" data-qid="' + id + '"  ><div class="q_selected_item_c">' + id + '' + title + '</div><span class="icon-remove-sign qdelete"  data-qid="' + id + '"></span></div>';
+                        $('.q_s_selected').append(html);
+                    }
+                }
+            });
+            $(document).on('click', '.q_selected_item .qdelete', function (e) {
+                $(this).parent().remove();
+            })
+        });
+
+    </script>
+{% endblock %}

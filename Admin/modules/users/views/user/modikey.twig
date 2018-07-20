@@ -1,0 +1,44 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block main %}
+<div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">修改微信key</span>
+      </div>
+      <div class="right_content_tab right_content_add">
+        <div class="right_content_addgame">
+          <div>
+           	<label>Uid</label>
+					<input type="text" name="uid" id="uid">
+          </div>
+		  <div>
+           	<label>KEY</label>
+					<input type="text" name="key" id="key">
+          </div>
+	      <div class="back_btn add_btn">
+          	<input type="submit" class="back_btn_blue" id="modisub" value="修改">
+          </div>
+	</div>
+</div>
+{% block js %}
+{% endblock %}
+<script type="text/javascript" src="https://cdn.feitianmao.cn/admin/Common/Js/jquery.js"></script>
+<script type="text/javascript">
+$('#modisub').click(function(){
+	var uid=$('#uid').val();
+	var key=$('#key').val();
+	if(confirm('确认修改该用户key？')){
+		$.post('/users/user/domodikey',{uid:uid,key:key},function(data){
+            if(data.status==0){
+                alert(data.info);
+                window.location.reload();
+            }else{
+                alert(data.info);
+            }
+        },'json');
+	}
+})
+</script>
+{% endblock %}
+
+

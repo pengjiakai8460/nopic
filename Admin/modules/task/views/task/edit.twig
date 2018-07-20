@@ -1,0 +1,170 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+    <link rel="stylesheet" href="/CDN//jqueryztree/zTreeStyle/zTreeStyle.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="/CDN/datetimepicker/css/bootstrap-datetimepicker.min.css" type="text/css" charset="utf-8">
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content ">
+            <div class="right_content_head clearfix ">
+                <form action="{{ postUrl }}" class="form-inline pull-left" method="post">
+                    <div class="form-group">
+                        <label>每日任务ID:<strong>{{ task.id }}</strong></label>
+                    </div>
+                    <div class="form-group">
+                        <label>任务名称:</label><input class="form-control" type="text" name="task_title"
+                                                   value="{{ task.title }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="">每日任务时间</label>
+                        <input size="16" type="text" value="{{ task.task_date }}" name="task_date" readonly class="form-control form_datetime">
+                    </div>
+                    <button class="btn btn-primary qadd">添加题目</button>
+                    <input type="submit" class="btn btn-primary" value="保存">
+                    <input type="hidden" name="qids" value="{{ qids }}">
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                </form>
+                <a href="/task/task/index" class="btn btn-primary ">返回列表</a>
+            </div>
+            <div class="right_content_table">
+                <div class="e_content">
+                    {% if qdatas is not null %}
+                        {% for key,q in qdatas %}
+                            <div class="q_body clearfix" data-qid="{{ q.id }}">
+                                <div class="q_delete"><span>删除</span></div>
+                                <div class="q_content">
+                                    <div class="q_title">
+                                        <p class="q_sort">{{ key+1 }}</p>、{{ q.title | raw }}
+                                    </div>
+                                    <ol class="op-items">
+                                        {% for q_res in q.content %}
+                                            <li class="op-item">
+                                                {{ q_res.n }}、{{ q_res.c | raw }}
+                                            </li>
+                                        {% endfor %}
+                                    </ol>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="back_text">Copyright © 2016 XiaoMa Technology</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="application/javascript" src="/CDN/jqueryztree/jquery.ztree.core.js"></script>
+    <script type="application/javascript" src="/CDN/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="application/javascript" src="/CDN/datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/CDN/Js/tag/tag.js?v=1.01"></script>
+    <script type="text/javascript">
+        $(function () {
+            var qcount = {{ qdatas | length }}
+            $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd',language:'zh-CN',minView: 'month',});
+            $(".qadd").click(function (e) {
+                e.preventDefault();
+                var qids = getques();
+                var url = getAjaxUrl("/task/task/qadd?task_id={{ task.id }}&qids="+qids);
+                dialog(url);
+            })
+            $(".right_content_head input[type=submit]").click(function (e) {
+                e.preventDefault();
+                var _form = $(".right_content_head form");
+                var that = $(this);
+                if($('.e_content .q_body')){
+                    var qid = '';
+                    $('.e_content .q_body').each(function(e){
+                        qid += qid==''?$(this).attr('data-qid'):(","+$(this).attr('data-qid'))
+                    })
+                    _form.find("input[name=qids]").val(qid);
+                }
+                var task_date = $('input[name=task_date]').val(),task_title = $('input[name=task_title]').val();
+                if(task_title == ''){
+                    warning_prompt('任务名称必选');
+                    return;
+                }
+                if(task_date == '' || task_date == undefined){
+                    warning_prompt('任务时间必选');
+                    return;
+                }
+
+                setBtnLoadingStatus(that,'加载中...')
+                var data = _form.serialize();
+                var url = _form.attr('action')
+                $.post(url,data,function (res) {
+                    setBtnSubmitStatus(that)
+                    if(res.code == 200){
+                        success_prompt('保存成功');
+                    }else{
+                        fail_prompt('保存失败')
+                    }
+                    if(res.url != undefined){
+                        location.href = res.url;
+                    }
+                });
+            })
+            $(document).on('click', "input[name='q_id']", function (e) {
+                if($(this).prop('checked')){
+                    var qitem;
+                    qitem = analyseQform($(this).parent().parent());
+                    appendQuestion(qitem)
+                }else{
+                    var qid = $(this).attr('data-qid');
+                    $(".q_body[data-qid="+qid+"]").remove();
+                    fromatquessort();
+                }
+
+            });
+            $('.e_content').on('click', ".q_body .q_delete ", function (e) {
+                $(this).parent().remove();
+                fromatquessort();
+            });
+            $(document).on('click','#myModal button[type=submit]',function (e) {
+                    e.preventDefault();
+                    var checkeditem = '';
+                    $('#myModal input[name=q_id]').each(function (e) {
+                        if($(this).prop('checked')){
+                            checkeditem += checkeditem!=''?'|'+$(this).attr('data-qid') : $(this).attr('data-qid');
+                        }
+                    })
+                    dialogClose();
+            })
+
+            function analyseQform(obj){
+                var qdata ={'id':'','title':'','content':''};
+                qdata.title = obj.find("input[name='q_id']").attr('data-qtitle');
+                qdata.id  = obj.find("input[name='q_id']").attr('data-qid');
+                qdata.content = obj.find('.q_content').html();
+                return qdata;
+            }
+            function appendQuestion(obj) {
+                qcount  += 1;
+                var html = '<div class="q_body clearfix" data-qid="' + obj.id + '"><div class="q_delete"><span>删除</span></div><div class="q_content"><div class="q_title"><p class="q_sort">' + qcount + '</p>、' + obj.title + '</div>\n' + obj.content +'</div></div>';
+                $('.e_content').append(html);
+            }
+            function fromatquessort(){
+                var new_sort = 0;
+                if($('.e_content .q_body')){
+                    $('.e_content .q_body').each(function(e){
+                        ++new_sort ;
+                        $(this).find(".q_sort").html(new_sort);
+                    })
+                }
+                qcount = new_sort;
+            }
+            function getques() {
+                var ques = '';
+                if($('.e_content .q_body')){
+                    $('.e_content .q_body').each(function(e){
+                        ques += ques ? "," + $(this).attr('data-qid') : ($(this).attr('data-qid')) ;
+                    })
+                }
+                return ques;
+            }  
+        })
+
+
+    </script>
+{% endblock %}

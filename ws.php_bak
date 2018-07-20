@@ -1,0 +1,58 @@
+<?php
+//创建websocket服务器对象，监听0.0.0.0:9502端口
+set_time_limit(0);
+$redis = new Redis("r-uf6de7623d6e0ef4.redis.rds.aliyuncs.com", "6379");
+$redis->select(0);
+$redis->select(0);
+$ret = $redis->set("a", 1);
+echo $ret;exit;
+$ws = new swoole_websocket_server("0.0.0.0", 9502);
+$ws->set(array(
+    'worker_num' => 8,
+    'dispatch_mode' => 2,
+    'daemonize' => 0,
+    'log_file' => '/data/logs/xmw/logs/swoole.log'
+));
+
+//监听WebSocket连接打开事件
+$ws->on('open', function ($ws, $request) {
+    $msg['user'] ='系统消息';
+    $msg['content'] = '欢迎用户 '.$request->fd." 来到聊天室\n";
+    sendAllClient($ws, $msg);
+});
+
+//监听WebSocket消息事件
+$ws->on('message', function ($ws, $frame) {
+        $msg['user'] = '用户'.$frame->fd;
+        $msg['content'] = "{$frame->data}\n";
+        sendAllClient($ws, $msg, $frame);
+});
+
+//监听WebSocket连接关闭事件
+$ws->on('close', function ($ws, $fd) {
+    //删除已断开的客户端
+    unset($ws->user_c[$fd-1]);
+    $msg['user'] = '系统消息';
+    $msg['content'] = "用户 {$fd} 退出了聊天室\n";
+    sendAllClient($ws, $msg);
+});
+
+//发送消息到所有在线的客户端
+function sendAllClient($ws, $msg, $frame = null){
+    //var_dump($ws->connections);
+    $msg = implode(',', $msg);
+    foreach($ws->connections as $fd){
+        $ws->push($fd, $msg);
+        //如果是某个客户端，自己发的则加上isnew属性，否则不加
+        /**
+        if($frame->fd == $fd){
+            $ws->push($frame->fd, $frame->data.',"self":""');
+         }else{
+            $ws->push($fd, $msg);
+         }
+         * **/
+}
+}
+//测试112
+$ws->start();
+

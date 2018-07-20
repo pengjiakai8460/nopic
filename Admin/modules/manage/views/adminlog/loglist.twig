@@ -1,0 +1,143 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back_common.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/back.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="{{ cdn }}/web/Css/center.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="{{ cdn }}/admin/Css/tankuang.css" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/CDN/Js/skins/jedate.css" charset="utf-8">
+    <style>
+        #strat{
+            top: -1px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+  <div class="right">
+    <div class="right_content ">
+      <div class="right_content_head clearfix " style="padding-bottom: 35px;padding-right: 10px;padding-left: 10px;">
+          <!--
+        <form action="{% if not islocked %}/users/user/unlocked-user-list{% endif %}" method="get">
+        <span class="selected"><a href="">日志列表</a></span>
+            <label for="strat" style="display: inline-block;height: 34px;position: relative;top: 0;left: 15px;margin-left: 20px;">起始UID：</label><input type="text" size='12' placeholder="起始UID/1万条" id="strat">
+        <a href="javascript:;" id="excle" style="position:relative;top:-3px;left:28px;display: inline-block;text-align:center;border-radius:2px;background:rgb(254, 177, 44);color:#fff; line-height:34px; width:100px;height:35px;border:1px solid #e8e8e8;">导出用户数据</a>
+        -->
+          <form action="/manage/adminlog/loglist" method="get">
+
+        <p class="right_content_search clearfix" style="float: left;">
+            <!--
+            <label for="selecttype" style="display: inline-block;height: 34px;float: left">精确查询：</label>
+            <select id="selecttype" name="selecttype" style="display: inline-block;height: 34px;float: left">
+                <option value="0" {% if selecttype==0 %}selected="selected"{% endif %}>所有</option>
+                <option value="1" {% if selecttype==1 %}selected="selected"{% endif %}>uid</option>
+                <option value="2" {% if selecttype==2 %}selected="selected"{% endif %}>username</option>
+                <option value="3" {% if selecttype==3 %}selected="selected"{% endif %}>mobile</option>
+            </select>
+            <input type="text" name="search" placeholder="编号/用户名/手机" value="{{ app.request.get.search }}" style="width: 80px;">
+            -->
+            <label style="">UID:<input type="text" name="uid" value="{{ app.request.get.uid }}" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"/></label>
+            <label style="">用户名:<input type="text" name="username" value="{{ app.request.get.username }}"/></label>
+            <label style="">操作描述:<input type="text" name="desc" value="{{ app.request.get.desc }}"/></label>
+
+            <label for="opttype" style="display: inline-block;height: 34px;float: left">操作类型：</label>
+            <select id="opttype" name="opttype" style="display: inline-block;height: 34px;float: left" >
+
+                <option value="0" {% if app.request.get.opttype==0 %}selected="selected"{% endif %}>所有</option>
+                <option value="1" {% if app.request.get.opttype ==1 %}selected="selected"{% endif %}>操作</option>
+                <option value="2" {% if app.request.get.opttype ==2 %}selected="selected"{% endif %}>查看</option>
+            </select>
+
+            <label>模块|方法|函数：</label>
+            <input type="text" name="maf" placeholder="模块/方法/函数" value="{{ app.request.get.maf }}">
+            <br/>
+            开始时间:
+            <input name="st" class="optsdate" style="height: 30px;" value="{{ app.request.get.st }}">
+
+            结束时间: <input name="et" class="optsdate" style="height: 30px;" value="{{ app.request.get.et }}">
+
+          {#<a href="{% if not islocked %}unlocked-user-list{% else %}locked-user-list{% endif %}" class="search_btn">搜索</a>#}
+          <button type="submit" class="search_btn">搜索</button>
+
+          </p>
+          </form>
+
+      </div>
+      <div style="padding-top: 5px;" class="right_content_table right_content_notice right_content_userlist right_content_tab right_content_usertable ">
+        <table class="tankuang">
+          <thead>
+            <tr>
+              <th width="5.02%">ID</th>
+              <th width="5.08%">UID</th>
+              <th width="8%">用户名</th>
+              <th width="5%">操作类型</th>
+              <th width="8%">模块|方法|函数</th>
+              <th width="8%">操作描述</th>
+              <th width="5%">请求类型</th>
+              <th width="18.36%">请求参数</th>
+              <th width="6.66%">ip</th>
+              <th width="10.47%">请求时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if lists is not null %}
+            {% for list in lists %}
+            <tr>
+              <td>{{ list.id }}</td>
+              <td>{{ list.uid }}</td>
+              <td>{{ list.username }}</td>
+              <td>{{ list.opt_type }}</td>
+              <td>{{ list.module }}<br/>{{ list.cont }}<br/>{{ list.action }}</td>
+              <td>{{ list.opt_desc }}</td>
+              <td>{{ list.req_type }}</td>
+              <td style="word-break:break-all;">{{ list.req_data }}</td>
+              <td> {{ list.ip }}</td>
+              <td>{{ list.created_at | date('Y-m-d H:i:s')}}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+        <!-- <a href="" class="del_btn">删除</a> -->
+        <div class="page">
+        {% block page %}
+        {{ LinkPager(pagination) | raw }}
+        <span>共{{ pagenum }}页，{{ count }}条记录</span>
+        {% endblock %}
+      </div>
+      </div>
+      
+      <div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block commonjs %}
+  <script type="text/javascript" src="{{ cdn }}/admin/Common/Js/jquery.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/back.js"></script>
+  {#<script type="text/javascript" src="{{ cdn }}/admin/Js/sendmessage.js"></script>#}
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/tixianmessage.js"></script>
+  <script type="text/javascript" src="/CDN/Js/jquery.jedate.js"></script>
+
+  {#<script type="text/javascript" src="/CDN/Js/sendmessage.js"></script>#}
+  <script type="text/javascript">
+      //时间控件
+      $(".optsdate").jeDate({
+          isinitVal: true,
+          festival: false,
+          trigger: "click mouseenter focus",
+          isTime:true,
+          ishmsVal: false,
+          //minDate: opts.minDate,
+          //maxDate: opts.maxDate,
+          format: "YYYY-MM-DD hh:mm",
+          zIndex: 3000,
+          okfun:function (elem,val) {
+              //alert(elem)
+          }
+      });
+      
+      //提交搜索项
+      $(".search_btn").click(function () {
+          
+      });
+  </script>
+{% endblock %}

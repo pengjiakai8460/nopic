@@ -1,0 +1,69 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block css %}
+<link rel="stylesheet" type="text/css"
+	href="{{cdn}}/admin/Css/back_common.css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="{{cdn}}/admin/Css/back.css"
+	charset="utf-8">
+{% endblock %}
+{% block main %}
+<div class="right">
+	<div class="right_content">
+		<div class="right_content_head clearfix">
+			<span class="selected">积分排行</span>
+
+			<p class="right_content_search clearfix">
+          <input type="text" name="search" id="search" placeholder="输入uid" value="{{ search }}">
+          <a class="search_btn" id="search_btn">搜索</a>
+        </p>
+		</div>
+		<div
+			class="right_content_table  right_content_tab right_content_usertable">
+			<table>
+				<thead>
+					<tr>
+					    <th width="25%">uid</th>
+						<th width="20%">用户名</th>
+						<th width="20%">积分</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in data %}
+					<tr>
+                        <td>{{ p.uid }}</td>
+						<td>
+                        {{ p.username }}
+                        <br>
+                        {{ p.realname }}
+                        </td>
+                        <td>{{ p.point }}</td>
+					</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+
+		</div>
+		<div class="page">
+		<span>总计:{{ count }}条/{{ pagenum }}页</span>
+        {{ LinkPager(pages)|raw }}
+		</div>
+		<div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+	</div>
+</div>
+<script type="text/javascript" src="Js/back.js"></script>
+</div>
+{% endblock %}
+{% block js %}
+  <script>
+    $(document).ready(function () {
+      $('#search_btn').click(function () {
+        var search = $('#search').val();
+        if(search){
+          location.href = '/users/user/pointtop?search='+search;
+        }
+      })
+    })
+  </script>
+<script type="text/javascript" src="{{cdn}}/admin/Common/Js/jquery.js"></script>
+<script type="text/javascript" src="{{ cdn }}/admin/Js/tixianmessage.js"></script>
+{% endblock %}

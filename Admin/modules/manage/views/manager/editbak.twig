@@ -1,0 +1,87 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block main %}
+<div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">编辑管理员</span>
+      </div>
+      <div class="right_content_tab right_content_add">
+        <div class="right_content_addgame">
+        <form method="post" action="/manage/manager/manageredit">
+          <div>
+           	<label>用户名</label>
+					<input type="text" name="username" id="manusername" value="{{ data.username }}" disabled="true">
+					<input type="hidden" name="id" value="{{ data.id }}"/>
+          </div>
+		  <div>
+           	<label>密码</label>
+					<input type="password" name="password" id="manpassword" value="{{ data.password }}" disabled="true">
+                    <input type="checkbox" name="isChangePassword" id="isChangePassword" value='1'>修改密码
+          </div>
+		  <div>
+           	<label>真实姓名</label>
+					<input type="text" name="realname" id="manrealname" value="{{ data.realname }}">
+          </div>
+		  <div>
+           	<label>身份证号</label>
+					<input type="text" name="idcard" id="manidcard" value="{{ data.idcard }}">
+          </div>
+		  <div>
+           	<label>联系电话</label>
+					<input type="text" name="phone" id="manphone" value="{{ data.phone }}">
+          </div>
+		  <div>
+           	<label>昵称</label>
+					<input type="text" name="nickname" id="mannickname" value="{{ data.nickname }}">
+          </div>
+          <div>
+           	<label>类型</label>
+					<input type="text" name="type" id="type" value="{{ data.type }}">请输入寄售、担保、充值、账号或为空
+          </div>
+
+			<div>
+				<label>角色</label>
+				<select name="role">
+					<option value="0">--请选择--</option>
+
+					{% if roles is not null %}
+						{% for role in roles %}
+							<option value="{{ role.name }}"
+							{% if item==role.name %}selected="selected"{% endif %} >{{ role.description }}</option>
+						{% endfor %}
+					{% endif %}
+				</select>
+			</div>
+
+	      <div class="back_btn add_btn">
+          	<input type="submit" class="back_btn_blue" id="addmansub" value="保存">
+          </div>
+		</form>
+	</div>
+</div>
+{% block js %}
+  <script type="text/javascript" src="{{ cdn }}/admin/Common/Js/jquery.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/back.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/back_mobajax.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/lincss.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+	  $("#isChangePassword").bind("click",function(){
+		  var val = $("#isChangePassword").val();
+		  if($(this).is(":checked")){
+			  $('#manpassword').removeAttr("disabled");
+			  $('#manpassword').val('');
+		  } else {
+			  $('#manpassword').attr("disabled",'disabled');
+			  $('#manpassword').val('{{ data.password }}');
+		  }
+		
+		  
+	  });
+	})
+  </script>
+{% endblock %}
+  
+{% endblock %}
+
+

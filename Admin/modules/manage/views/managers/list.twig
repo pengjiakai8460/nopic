@@ -1,0 +1,89 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block main %}
+<style>
+
+</style>
+<div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">管理员列表</span>
+        
+        <p class="right_content_search clearfix">
+          <input type="text" name="search" id="searchcon">
+          <button type="submit" class="search_btn">搜索</button>
+        </p>
+      </div>
+      <div class="right_content_table right_content_fankui right_content_tab right_content_usertable">
+	  	<table>
+            <thead>
+    		<tr>
+    			<th>
+    				 #
+    			</th>
+    			<th>
+    				 账号
+    			</th>
+    			<th>
+    				 姓名
+    			</th>
+    			<th>
+    				身份证号
+    			</th>
+    			<th>
+    				 联系电话
+    			</th>
+    			<th>
+    				 QQ
+    			</th>
+    			<th>
+    				 电子邮箱
+    			</th>
+    			<th>
+    				 所属权限
+    			</th>
+    			<th>
+    				 创建时间
+    			</th>
+    			<th>
+    				 操作
+    			</th>
+    		</tr>
+    		</thead>
+    		<tbody id="contn">
+    		{% for data in list %}
+            <tr>
+                <td class="active">{{data.id}}</td>
+                <td class="success">{{data.username}}</td>
+                <td class="success">{{data.myname}}</td>
+                <td class="success">{{data.idcard}}</td>
+                <td class="success">{{data.tel}}</td>
+                <td class="success">{{data.qq}}</td>
+                <td class="success">{{data.email}}</td>
+                <td class="success">{{data.rule_name}}</td>
+                <td class="success">{{data.created}}</td>
+                <td class="danger">
+                    <a href="/index.php/manage/managers/manageredit?id={{data.id}}">编辑</a>
+                    <a href="/index.php/manage/managers/managerdelete?id={{data.id}}">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+                <div class="page">
+                    {{pageStr|raw}}
+               <div class="page">
+       
+<div class="back_text">Copyright © 2018 Xiaoma Wang</div>
+    </div>
+  </div>
+</div>
+{% block js %}
+  <script type="text/javascript" src="{{ cdn }}/admin/Common/Js/jquery.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/back.js"></script>
+  <script type="text/javascript" src="{{ cdn }}/admin/Js/back_mobajax.js"></script>
+  
+{% endblock %}
+  <script type="text/javascript" src="/CDN/Js/lincss.js"></script>
+
+{% endblock %}

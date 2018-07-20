@@ -1,0 +1,85 @@
+{% extends "@app/modules/layouts/main.twig" %}
+
+{% block main %}
+<div class="right">
+    <div class="right_content">
+      <div class="right_content_head clearfix">
+        <span class="selected">管理员列表</span>
+        <div class="right_content_search clearfix">
+        	<a href="manageradd" class="add_btn">添加管理员</a>
+        <form action="/manage/manager/managerlist" method="post" style="display:inline;">
+          <input type="text" name="search" id="searchcon" placeholder="请输入 “账户” 进行搜索">
+          <button type="submit" class="search_btn">搜索</button>
+        </form>
+        </div>
+      </div>
+      <div class="right_content_table right_content_fankui right_content_tab right_content_usertable">
+       <table>
+            <thead>
+    		<tr>
+    			<th>
+    				 ID
+    			</th>
+    			<th>
+    				 账号
+    			</th>
+    			<th>
+    				 姓名
+    			</th>
+    			<th>
+    				身份证号
+    			</th>
+    			<th>
+    				 联系电话
+    			</th>
+    			<th>
+    				 QQ
+    			</th>
+    			<th>
+    				 电子邮箱
+    			</th>
+    			<th>
+    				 所属权限
+    			</th>
+    			<th>
+    				 创建时间
+    			</th>
+    			<th>
+    				 操作
+    			</th>
+    		</tr>
+    		</thead>
+    		{% for data in list %}
+            <tr>
+                <td>{{data.id}}</td>
+                <td><a href="/manage/manager/admin?id={{data.id }}">{{data.username}}</a></td>
+                <td><a href="/manage/manager/admin?id={{data.id}}" target="_blank">{{data.realname}}</a></td>
+                <td>{{data.idcard}}</td>
+                <td>{{data.phone}}</td>
+                <td>{{data.avatar}}</td>
+                <td>{{data.email}}</td>
+                <td>{{data.auth_key}}</td>
+                <td>
+                {{data.created_at|date('Y-m-d')}}
+                <br>
+                {{data.created_at|date('H:i:s')}}
+                </td>
+                <td class="danger">
+                    <a href="/manage/manager/manageredit?id={{data.id}}">编辑</a>
+                    <a href="/manage/manager/managerdelete?id={{data.id}}">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+        <div class="page">
+           总计：{{ count }}条/{{ pagenum }}页{{ LinkPager(pages)|raw }}
+
+      </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+  <script type="text/javascript" src="/CDN/Js/back_mobajax.js"></script>
+{% endblock %}

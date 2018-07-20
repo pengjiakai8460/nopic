@@ -1,0 +1,70 @@
+{% extends "@Admin/modules/layouts/main.twig" %}
+{% block owncss %}
+    <style>
+        .table{table-layout:fixed;}
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="right">
+        <div class="right_content">
+            <div class="right_content_head clearfix">
+                <div class="form-inline search">
+                    <div class="form-group">
+                        <label for="task_name">用户UID：</label><input type="text" class="form-control" name="uid"
+                                                                   placeholder="请输入用户ID" id="uid"
+                                                                   value="{{ search.uid }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">搜索</button>
+                    <button type="button" class="btn btn-primary clearsearch">重置</button>
+                </div>
+            </div>
+            <div class="right_content_list">
+
+            </div>
+            <div class="back_text">Copyright © 2016 XiaoMa Technology</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+
+            loadtask();
+            $('.search button[type=submit]').click(function (e) {
+                loadtask();
+            })
+
+            $('.right_content_list').on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                loadtask(url);
+            });
+
+            $(".search button[type=button]").click(function (e) {
+                $('.search input').each(function (e) {
+                    $(this).val('');
+                })
+                loadtask();
+            })
+
+
+        })
+
+        function loadtask(url) {
+            loading($('.right_content_list'), 2);
+            if (url == undefined) {
+                url = '/feedback/feedback/index-list';
+            }
+            var uid = $('#uid').val().trim();
+            if (uid) {
+                url += '?uid=' + uid;
+            }
+            $.get(url, function (data) {
+                $('.right_content_list').html(data);
+                formatContainer($(".right_content_list"));
+            })
+        }
+
+    </script>
+{% endblock %}

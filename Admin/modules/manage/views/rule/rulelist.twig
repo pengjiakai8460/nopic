@@ -1,0 +1,49 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block content %}
+<style>
+table {background:#ffffff}
+table td,th {border:1px solid #999999;padding:10px}
+</style>
+<div class="site-login">
+    <h1>{{title}}</h1>
+
+    <div class="row">
+       <a href="/index.php/manage/rule/ruleadd">新增行</a>
+
+       <table class="table table-bordered table-hover">
+            <thead>
+    		<tr>
+    			<th>
+    				 #
+    			</th>
+    			<th>
+    				 角色名称
+    			</th>
+    			<th>
+    				 拥有权限
+    			</th>
+    			<th>
+    				 操作
+    			</th>
+    		</tr>
+    		</thead>
+    		{% for model in list %}
+            <tr>
+                <td class="active">{{model.id}}</td>
+                <td class="success">{{model.rule_name}}</td>
+                <td class="success">{{model.rule_permissions}}</td>
+                <td class="danger">
+                    <a href="/index.php/manage/rule/ruleedit?id={{model.id}}">编辑</a>
+                    <a href="/index.php/manage/rule/ruledelete?id={{model.id}}">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4" align="center">
+                    {{pageStr|raw}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block content %}
+
+<div class="portlet box purple ">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="fa fa-gift"></i> {{title}}
+		</div>
+		<div class="tools">
+			<a href="" class="collapse" data-original-title="" title="">
+			</a>
+			<!-- <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title="">
+			</a>
+			<a href="" class="reload" data-original-title="" title="">
+			</a> -->
+			<a href="" class="remove" data-original-title="" title="">
+			</a>
+		</div>
+	</div>
+	<div class="portlet-body form">
+		<form class="form-horizontal" role="form" method="POST">
+		<input type="hidden" id="id" name="id" value="{{data.id}}" />
+			<div class="form-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label">用户名</label>
+					<div class="col-md-9">
+						<input type="text" id="username" name="username" class="form-control input-lg" value="{{data.username}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">姓名</label>
+					<div class="col-md-9">
+						<input type="text" id="myname" name="myname" class="form-control input-lg" value="{{data.myname}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">身份证号</label>
+					<div class="col-md-9">
+						<input type="text" id="idcard" name="idcard" class="form-control input-lg" value="{{data.idcard}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">联系电话</label>
+					<div class="col-md-9">
+						<input type="text" id="tel" name="tel" class="form-control input-lg" value="{{data.tel}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">QQ</label>
+					<div class="col-md-9">
+						<input type="text" id="qq" name="qq" class="form-control input-lg" value="{{data.qq}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">电子邮箱</label>
+					<div class="col-md-9">
+						<input type="text" id="email" name="email" class="form-control input-lg" value="{{data.email}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">所属角色</label>
+					<div class="col-md-9">
+					   <select id="rule_id" name="rule_id">
+					       {% for rule in rules %}
+    						<option value="{{rule['id']}}"
+    						  {% if rule['id'] == data['rule_id'] %}
+    						      selected
+    						  {% endif %}
+    						>{{rule['rule_name']}}
+    						{% endfor %}
+					   </select>
+
+					</div>
+				</div>
+			</div>
+			<div class="form-actions right1">
+				<!-- <button type="button" class="btn default">Cancel</button> -->
+				<button type="submit" class="btn green">提交</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

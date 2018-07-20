@@ -1,0 +1,17 @@
+{% extends "@app/modules/layouts/main.twig" %}
+{% block content %}
+<div class="site-login">
+    <h1>{{title}}</h1>
+
+    <div class="row">
+        <div class="col-lg-5">
+
+            <a href="/index.php/manage/rule/permissionsadd">添加新权限</a><br>
+            <a href="/index.php/manage/rule/permissionslist">查看权限列表</a><br>
+            <a href="/index.php/manage/rule/ruleadd">添加新角色</a><br>
+            <a href="/index.php/manage/rule/rulelist">查看角色列表</a><br>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
